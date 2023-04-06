@@ -19,7 +19,7 @@ const db = {
             author: 'Николай Васильевич Гоголь',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: curDate.toISOString(),
+            createAt: new Date().toISOString(),
             publicationDate: new Date().toISOString(),
             availableResolutions: [
                 'P144',
@@ -32,7 +32,7 @@ const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: curDate.toISOString(),
+            publicationDate: new Date().toISOString(),
             availableResolutions: [
                 'P144', 'P240'
             ]
@@ -44,7 +44,7 @@ const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: curDate.toISOString(),
+            publicationDate: new Date().toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'
             ]
@@ -52,11 +52,9 @@ const db = {
     ]
 };
 exports.app.get('/', (req, res) => {
-    let currentDate = new Date().toISOString();
-    let currentDatePlus_oneDey = curDate.toISOString();
-    res.send(`EXPRESS <p>
-              ${currentDate} <p>
-              ${currentDatePlus_oneDey}`);
+    console.log(new Date().toISOString());
+    console.log(curDate.toISOString());
+    res.send('EXPRESS');
 });
 exports.app.get('/videos', (req, res) => {
     res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(db.videos);
