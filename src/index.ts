@@ -17,6 +17,12 @@ export type VideosType = {
 }
 export type ResolutionsType = Array<string>
 
+
+const curDate = new Date();
+const day = curDate.getDate() + 1;
+const date = curDate.setDate(day);
+   
+
 const db: {videos: VideosType[] } = {
     videos: [
         {
@@ -25,7 +31,7 @@ const db: {videos: VideosType[] } = {
             author: 'Николай Васильевич Гоголь',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createAt:curDate.toISOString(),
             publicationDate:  new Date().toISOString(),
             availableResolutions: [
                 'P144',
@@ -38,7 +44,7 @@ const db: {videos: VideosType[] } = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: curDate.toISOString(),
             availableResolutions: [
                 'P144', 'P240'
             ]
@@ -50,7 +56,7 @@ const db: {videos: VideosType[] } = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(), 
-            publicationDate: new Date().toISOString(),
+            publicationDate: curDate.toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' 
             ]
@@ -60,13 +66,13 @@ const db: {videos: VideosType[] } = {
     
 }
 
-const curDate = new Date();
-const day = curDate.getDate() + 1;
-const date = curDate.setDate(day);
-   
-
 app.get('/', (req: Request, res: Response) => {
-    res.send('EXPRESS')
+   
+    let currentDate = new Date().toISOString()
+    let currentDatePlus_oneDey = curDate.toISOString()
+    res.send(`EXPRESS <p>
+              ${currentDate} <p>
+              ${currentDatePlus_oneDey}`)
 })
 
 
