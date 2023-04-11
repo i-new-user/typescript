@@ -64,6 +64,10 @@ exports.app.post('/videos', (req, res) => {
     const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
+    const canBeDownloaded = req.body.ticanBeDownloadedtle;
+    const minAgeRestriction = req.body.minAgeRestriction;
+    const createAt = req.body.createAt;
+    const publicationDate = req.body.publicationDate;
     const availableResolutions = req.body.availableResolutions;
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
         errors.errorsMessages.push({
@@ -99,6 +103,10 @@ exports.app.post('/videos', (req, res) => {
             id: +(new Date),
             title: title,
             author: author,
+            canBeDownloaded: canBeDownloaded,
+            minAgeRestriction: minAgeRestriction,
+            createAt: createAt,
+            publicationDate: publicationDate,
             availableResolutions: availableResolutions,
         };
         db.videos.push(newVideo);

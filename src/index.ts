@@ -90,9 +90,12 @@ app.post('/videos', (req: Request, res: Response) => {
 
     const title = req.body.title;
     const author = req.body.author;
+    const canBeDownloaded = req.body.ticanBeDownloadedtle;
+    const minAgeRestriction = req.body.minAgeRestriction;
+    const createAt = req.body.createAt;
+    const publicationDate = req.body.publicationDate;
     const availableResolutions = req.body.availableResolutions;
-
-    
+   
 
     if(!title  || typeof title !== 'string' || title.trim() === '' || title.length > 40){
         errors.errorsMessages.push(
@@ -147,6 +150,10 @@ app.post('/videos', (req: Request, res: Response) => {
             id: +(new Date),
             title: title,
             author: author,
+            canBeDownloaded: canBeDownloaded,
+            minAgeRestriction: minAgeRestriction,
+            createAt: createAt,
+            publicationDate: publicationDate,
             availableResolutions: availableResolutions,
         }
         db.videos.push(newVideo)
