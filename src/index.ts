@@ -1,9 +1,14 @@
 import express, {Request, Response, NextFunction} from 'express'
 import { HTTP_STATUSES } from './HTTP/http_statuses';
 import { CreateVideoInputModelType } from './models_types/createVideoType'
+import {app} from './app'
+import bodyParser from 'body-parser';
+import cors from 'cors'
 
-export const app = express();
-const PORT = 3000;
+
+app.use(bodyParser.json())
+app.use(cors())
+
 
 export type VideosType = {
     id: number,
@@ -17,11 +22,8 @@ export type VideosType = {
 }
 export type ResolutionsType = Array<string>
 
-
-const curDate = new Date();
-const day = curDate.getDate() + 1;
-const date = curDate.setDate(day);
-   
+let currentDate = new Date().toISOString();
+let publicPlusOneDey = new Date( Date.now() + (3600 * 1000 * 24)).toISOString();
 
 const db: {videos: VideosType[] } = {
     videos: [
@@ -32,7 +34,7 @@ const db: {videos: VideosType[] } = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate:  new Date().toISOString(),
+            publicationDate:  new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144',
             ]
@@ -44,7 +46,7 @@ const db: {videos: VideosType[] } = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240'
             ]
@@ -56,7 +58,7 @@ const db: {videos: VideosType[] } = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(), 
-            publicationDate: new Date().toISOString(),
+            publicationDate:new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' 
             ]
@@ -67,10 +69,6 @@ const db: {videos: VideosType[] } = {
 }
 
 app.get('/', (req: Request, res: Response) => {
-    console.log(new Date().toISOString())
-    console.log(curDate.toISOString())
-   
-   
     res.send('EXPRESS')
 })
 
@@ -246,7 +244,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 app.get('/videos/:id', (req: Request, res: Response) => {
     const video = db.videos.find(v => v.id === +req.params.id)
-    console.log(video)
+    // console.log(video)
     if(!video ){
         res.send(HTTP_STATUSES.NOT_FOUND_404) 
     } else {
@@ -262,14 +260,10 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
             return;
         }
     }
-    res.status(HTTP_STATUSES.NOT_FOUND_404) 
+    res.send(HTTP_STATUSES.NOT_FOUND_404) 
 })
 
 app.delete('/testing/all-data', ( req, res) => {
     db.videos = []; 
-    res.send(HTTP_STATUSES.NO_CONTENT_204)  
-})
-
-app.listen(PORT, () => {
-    console.log("START EXPRESS")
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)  
 })

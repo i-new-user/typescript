@@ -1,16 +1,17 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.app = void 0;
-const express_1 = __importDefault(require("express"));
 const http_statuses_1 = require("./HTTP/http_statuses");
-exports.app = (0, express_1.default)();
-const PORT = 3000;
-const curDate = new Date();
-const day = curDate.getDate() + 1;
-const date = curDate.setDate(day);
+const app_1 = require("./app");
+const obj = {
+    id: 1,
+    name: "tom",
+    isStudent: true,
+};
+app_1.app.get('/obj', (req, res) => {
+    res.send(obj);
+});
+let currentDate = new Date().toISOString();
+let publicPlusOneDey = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const db = {
     videos: [
         {
@@ -20,7 +21,7 @@ const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144',
             ]
@@ -32,7 +33,7 @@ const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240'
             ]
@@ -44,22 +45,22 @@ const db = {
             canBeDownloaded: true,
             minAgeRestriction: null,
             createAt: new Date().toISOString(),
-            publicationDate: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'
             ]
         }
     ]
 };
-exports.app.get('/', (req, res) => {
+app_1.app.get('/', (req, res) => {
     console.log(new Date().toISOString());
-    console.log(curDate.toISOString());
+    console.log();
     res.send('EXPRESS');
 });
-exports.app.get('/videos', (req, res) => {
+app_1.app.get('/videos', (req, res) => {
     res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(db.videos);
 });
-exports.app.post('/videos', (req, res) => {
+app_1.app.post('/videos', (req, res) => {
     const errors = [];
     const title = req.body.title;
     const author = req.body.author;
@@ -108,7 +109,7 @@ exports.app.post('/videos', (req, res) => {
         res.status(http_statuses_1.HTTP_STATUSES.CREATED_201).send(newVideo);
     }
 });
-exports.app.put('/videos/:id', (req, res) => {
+app_1.app.put('/videos/:id', (req, res) => {
     const errors = [];
     const title = req.body.title;
     const author = req.body.author;
@@ -194,9 +195,9 @@ exports.app.put('/videos/:id', (req, res) => {
             res.send(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
 });
-exports.app.get('/videos/:id', (req, res) => {
+app_1.app.get('/videos/:id', (req, res) => {
     const video = db.videos.find(v => v.id === +req.params.id);
-    console.log(video);
+    // console.log(video)
     if (!video) {
         res.send(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -204,7 +205,7 @@ exports.app.get('/videos/:id', (req, res) => {
         res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(video);
     }
 });
-exports.app.delete('/videos/:id', (req, res) => {
+app_1.app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i < db.videos.length; i++) {
         if (db.videos[i].id === +req.params.id) {
             db.videos.splice(i, 1);
@@ -212,12 +213,9 @@ exports.app.delete('/videos/:id', (req, res) => {
             return;
         }
     }
-    res.status(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+    res.send(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
 });
-exports.app.delete('/testing/all-data', (req, res) => {
+app_1.app.delete('/testing/all-data', (req, res) => {
     db.videos = [];
-    res.send(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-});
-exports.app.listen(PORT, () => {
-    console.log("START EXPRESS");
+    res.sendStatus(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });
