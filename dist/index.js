@@ -3,12 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
+const express_1 = __importDefault(require("express"));
 const http_statuses_1 = require("./HTTP/http_statuses");
-const app_1 = require("./app");
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-app_1.app.use(body_parser_1.default.json());
-app_1.app.use((0, cors_1.default)());
+exports.app = (0, express_1.default)();
+const PORT = process.env.PORT || 3000;
+exports.app.use(body_parser_1.default.json());
+exports.app.use((0, cors_1.default)());
 let currentDate = new Date().toISOString();
 let publicPlusOneDey = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const db = {
@@ -51,49 +54,36 @@ const db = {
         }
     ]
 };
-app_1.app.get('/', (req, res) => {
+exports.app.get('/', (req, res) => {
     res.send('EXPRESS');
 });
-app_1.app.get('/videos', (req, res) => {
+exports.app.get('/videos', (req, res) => {
     res.send(db.videos);
 });
-app_1.app.post('/videos', (req, res) => {
-    const errors = [];
+exports.app.post('/videos', (req, res) => {
+    const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
-    console.log(req.body);
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "title"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "title"
         });
     }
     if (!author || typeof author !== 'string' || author.trim() === '' || author.length > 20) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "author"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "author"
         });
     }
     if (!Array.isArray(availableResolutions) || availableResolutions.length < 1) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "availableResolutions"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "availableResolutions"
         });
     }
-    if (errors.length > 0) {
+    if (errors.errorsMessages.length > 0) {
         res.status(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400).send(errors);
     }
     else {
@@ -107,8 +97,8 @@ app_1.app.post('/videos', (req, res) => {
         res.status(http_statuses_1.HTTP_STATUSES.CREATED_201).send(newVideo);
     }
 });
-app_1.app.put('/videos/:id', (req, res) => {
-    const errors = [];
+exports.app.put('/videos/:id', (req, res) => {
+    const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
@@ -116,66 +106,42 @@ app_1.app.put('/videos/:id', (req, res) => {
     const minAgeRestriction = req.body.minAgeRestriction;
     const publicationDate = req.body.publicationDate;
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "title"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "title"
         });
     }
     if (!author || typeof author !== 'string' || author.trim() === '' || author.length > 20) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "author"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "author"
         });
     }
     if (!Array.isArray(availableResolutions) || availableResolutions.length < 1) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "availableResolutions"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "availableResolutions"
         });
     }
     if (typeof canBeDownloaded !== 'boolean') {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "canBeDownloaded"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "canBeDownloaded"
         });
     }
     if (typeof minAgeRestriction !== 'number' && (minAgeRestriction < 1 || minAgeRestriction > 18)) {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "minAgeRestriction"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "minAgeRestriction"
         });
     }
     if (typeof publicationDate !== 'string' || publicationDate.trim() === '') {
-        errors.push({
-            "errorsMessages": [
-                {
-                    "message": "error",
-                    "field": "publicationDate"
-                }
-            ]
+        errors.errorsMessages.push({
+            "message": "error",
+            "field": "publicationDate"
         });
     }
-    if (errors.length > 0) {
+    if (errors.errorsMessages.length > 0) {
         res.status(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400).send(errors);
     }
     const video = db.videos.find(v => v.id === +req.params.id);
@@ -193,7 +159,7 @@ app_1.app.put('/videos/:id', (req, res) => {
             res.send(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
 });
-app_1.app.get('/videos/:id', (req, res) => {
+exports.app.get('/videos/:id', (req, res) => {
     const video = db.videos.find(v => v.id === +req.params.id);
     // console.log(video)
     if (!video) {
@@ -203,7 +169,7 @@ app_1.app.get('/videos/:id', (req, res) => {
         res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(video);
     }
 });
-app_1.app.delete('/videos/:id', (req, res) => {
+exports.app.delete('/videos/:id', (req, res) => {
     for (let i = 0; i < db.videos.length; i++) {
         if (db.videos[i].id === +req.params.id) {
             db.videos.splice(i, 1);
@@ -213,7 +179,10 @@ app_1.app.delete('/videos/:id', (req, res) => {
     }
     res.send(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
 });
-app_1.app.delete('/testing/all-data', (req, res) => {
+exports.app.delete('/testing/all-data', (req, res) => {
     db.videos = [];
     res.sendStatus(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+});
+exports.app.listen(PORT, () => {
+    console.log("START EXPRESS");
 });
