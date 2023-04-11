@@ -83,6 +83,14 @@ exports.app.post('/videos', (req, res) => {
             "field": "availableResolutions"
         });
     }
+    for (let elem of availableResolutions) {
+        if (elem.length > 5) {
+            errors.errorsMessages.push({
+                "message": "error",
+                "field": "availableResolutions"
+            });
+        }
+    }
     if (errors.errorsMessages.length > 0) {
         res.status(http_statuses_1.HTTP_STATUSES.BAD_REQUEST_400).send(errors);
     }
@@ -129,7 +137,7 @@ exports.app.put('/videos/:id', (req, res) => {
             "field": "canBeDownloaded"
         });
     }
-    if (typeof minAgeRestriction !== 'number' && (minAgeRestriction < 1 || minAgeRestriction > 18)) {
+    if (typeof minAgeRestriction !== 'number' || (minAgeRestriction < 1 || minAgeRestriction > 18)) {
         errors.errorsMessages.push({
             "message": "error",
             "field": "minAgeRestriction"

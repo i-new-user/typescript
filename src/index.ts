@@ -124,6 +124,18 @@ app.post('/videos', (req: Request, res: Response) => {
             
         )
     }
+    for(let elem of availableResolutions){
+        if(elem.length > 5){
+            errors.errorsMessages.push(
+           
+                {
+                  "message": "error",
+                  "field": "availableResolutions"
+                }
+              
+          )
+        }
+    }
 
   
 
@@ -201,7 +213,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
       )
     }
 
-    if(typeof minAgeRestriction !== 'number' && (minAgeRestriction < 1 || minAgeRestriction > 18) ){
+    if(typeof minAgeRestriction !== 'number' || (minAgeRestriction < 1 || minAgeRestriction > 18) ){
         errors.errorsMessages.push(
            
             {
