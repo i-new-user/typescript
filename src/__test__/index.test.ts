@@ -12,7 +12,7 @@ describe('/videos', () => {
     it('should return 200', async () => {
         await request(app)
             .get('/')
-            expect('EXPRESS')
+            .expect(200)
     })
         
             
