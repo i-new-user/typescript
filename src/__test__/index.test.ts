@@ -16,7 +16,50 @@ describe('/videos', () => {
     })
         
             
-      
+    it('should return 200 and objects', async () => {
+        const res = await request(app)
+            .get('/videos')
+           
+            .expect( 200)
+            // .expect( 200,[
+            //     {
+            //         id: 1,
+            //         title: 'Мёртвые души',
+            //         author: 'Николай Васильевич Гоголь',
+            //         canBeDownloaded: true,
+            //         minAgeRestriction: null,
+            //         createAt: new Date().toISOString(),
+            //         publicationDate:  new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
+            //         availableResolutions: [
+            //             'P144',
+            //         ]
+            //     }, 
+            //     {
+            //         id: 2,
+            //         title: 'Русслан и Людмила',
+            //         author: 'Пушкин Александр Сергеевич',
+            //         canBeDownloaded: true,
+            //         minAgeRestriction: null,
+            //         createAt: new Date().toISOString(),
+            //         publicationDate: new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
+            //         availableResolutions: [
+            //             'P144', 'P240'
+            //         ]
+            //     },
+            //     {
+            //         id:  3,
+            //         title: 'Тихий дон',
+            //         author: 'Шолохов Михаил Александрович',
+            //         canBeDownloaded: true,
+            //         minAgeRestriction: null,
+            //         createAt: new Date().toISOString(), 
+            //         publicationDate:new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
+            //         availableResolutions: [
+            //             'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' 
+            //         ]
+            //     }
+            // ] )
+        })
 
 })
 

@@ -7,6 +7,7 @@ exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 exports.app = (0, express_1.default)();
 const PORT = 3000;
+exports.app.use(express_1.default.json());
 exports.app.listen(PORT, () => {
     console.log("START EXPRESS");
 });

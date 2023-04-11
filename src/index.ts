@@ -68,14 +68,16 @@ const db: {videos: VideosType[] } = {
     
 }
 
+
+app.get('/videos', (req: Request, res: Response<VideosType[]>) => {
+    res.send(db.videos)
+})
+
+
 app.get('/', (req: Request, res: Response) => {
-    res.send('EXPRESS')
+  res.send('EXPRESS')
 })
 
-
-app.get('/videos', (req: Request, res: Response) => {
-    res.status(HTTP_STATUSES.OK_200).send(db.videos)
-})
 
 app.post('/videos', (req: Request, res: Response) => {
    
@@ -85,7 +87,7 @@ app.post('/videos', (req: Request, res: Response) => {
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
 
-    
+    console.log(req.body)
 
     if(!title  || typeof title !== 'string' || title.trim() === '' || title.length > 40){
         errors.push({
@@ -109,7 +111,7 @@ app.post('/videos', (req: Request, res: Response) => {
           })
     }
     
-    if(!Array.isArray(availableResolutions) && availableResolutions.length < 1){
+    if(!Array.isArray(availableResolutions) || availableResolutions.length < 1){
         errors.push({
             "errorsMessages": [
               {
@@ -174,7 +176,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
           })
     }
     
-    if(!Array.isArray(availableResolutions) && availableResolutions.length < 1){
+    if(!Array.isArray(availableResolutions) || availableResolutions.length < 1){
         errors.push({
             "errorsMessages": [
               {
@@ -263,7 +265,7 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     res.send(HTTP_STATUSES.NOT_FOUND_404) 
 })
 
-app.delete('/testing/all-data', ( req, res) => {
+app.delete('/testing/all-data', ( req: Request, res: Response) => {
     db.videos = []; 
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)  
 })

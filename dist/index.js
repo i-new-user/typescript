@@ -1,15 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_statuses_1 = require("./HTTP/http_statuses");
 const app_1 = require("./app");
-const obj = {
-    id: 1,
-    name: "tom",
-    isStudent: true,
-};
-app_1.app.get('/obj', (req, res) => {
-    res.send(obj);
-});
+const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
+app_1.app.use(body_parser_1.default.json());
+app_1.app.use((0, cors_1.default)());
 let currentDate = new Date().toISOString();
 let publicPlusOneDey = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
 const db = {
@@ -53,18 +52,17 @@ const db = {
     ]
 };
 app_1.app.get('/', (req, res) => {
-    console.log(new Date().toISOString());
-    console.log();
     res.send('EXPRESS');
 });
 app_1.app.get('/videos', (req, res) => {
-    res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(db.videos);
+    res.send(db.videos);
 });
 app_1.app.post('/videos', (req, res) => {
     const errors = [];
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
+    console.log(req.body);
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
         errors.push({
             "errorsMessages": [
@@ -85,7 +83,7 @@ app_1.app.post('/videos', (req, res) => {
             ]
         });
     }
-    if (!Array.isArray(availableResolutions) && availableResolutions.length < 1) {
+    if (!Array.isArray(availableResolutions) || availableResolutions.length < 1) {
         errors.push({
             "errorsMessages": [
                 {
@@ -137,7 +135,7 @@ app_1.app.put('/videos/:id', (req, res) => {
             ]
         });
     }
-    if (!Array.isArray(availableResolutions) && availableResolutions.length < 1) {
+    if (!Array.isArray(availableResolutions) || availableResolutions.length < 1) {
         errors.push({
             "errorsMessages": [
                 {
