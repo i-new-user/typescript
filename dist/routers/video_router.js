@@ -99,7 +99,7 @@ exports.videosRouter.post('/', (req, res) => {
             availableResolutions: availableResolutions,
             minAgeRestriction: minAgeRestriction,
             publicationDate: publicationDate,
-            createAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         };
         console.log(newVideo);
         db.videos.push(newVideo);

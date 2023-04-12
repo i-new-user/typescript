@@ -14,7 +14,7 @@ export type VideosType = {
     author: string,
     canBeDownloaded?: boolean,
     minAgeRestriction?: number | null | undefined,
-    createAt?: string,
+    createdAt?: string,
     publicationDate?: string,
     availableResolutions: ResolutionsType
 }
@@ -144,7 +144,7 @@ videosRouter.post('/', (req: Request, res: Response) => {
             availableResolutions: availableResolutions,
             minAgeRestriction: minAgeRestriction,
             publicationDate: publicationDate,
-            createAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         }
         console.log(newVideo)
         db.videos.push(newVideo)
