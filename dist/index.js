@@ -13,8 +13,10 @@ const PORT = process.env.PORT || 3000;
 exports.app.use(body_parser_1.default.json());
 exports.app.use((0, cors_1.default)());
 exports.app.use('/videos', video_router_1.videosRouter);
-let currentDate = new Date().toISOString();
-let publicPlusOneDey = new Date(Date.now() + (3600 * 1000 * 24)).toISOString();
+exports.app.use('/testing/all-data', video_router_1.deleteAllVideosRouter);
+exports.app.get('/', (req, res) => {
+    res.send('EXPRESS');
+});
 exports.app.listen(PORT, () => {
     console.log("START EXPRESS");
 });

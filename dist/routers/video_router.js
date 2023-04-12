@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videosRouter = void 0;
+exports.deleteAllVideosRouter = exports.videosRouter = void 0;
 const express_1 = require("express");
 const http_statuses_1 = require("../HTTP/http_statuses");
 exports.videosRouter = (0, express_1.Router)({});
+exports.deleteAllVideosRouter = (0, express_1.Router)({});
 const db = {
     videos: [
         {
@@ -44,8 +45,9 @@ const db = {
         }
     ]
 };
-exports.videosRouter.get('/', (req, res) => {
-    res.send('EXPRESS');
+exports.deleteAllVideosRouter.delete('/testing/all-data', (req, res) => {
+    db.videos = [];
+    res.sendStatus(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });
 exports.videosRouter.get('/', (req, res) => {
     res.send(db.videos);
@@ -178,8 +180,4 @@ exports.videosRouter.delete('/:id', (req, res) => {
         }
     }
     res.send(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-});
-exports.videosRouter.delete('/testing/all-data', (req, res) => {
-    db.videos = [];
-    res.sendStatus(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });

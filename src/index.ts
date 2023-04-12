@@ -5,7 +5,7 @@ import {FieldErrorTupe} from './models_types/errorType'
 
 import bodyParser from 'body-parser';
 import cors from 'cors'
-import { videosRouter } from './routers/video_router';
+import { videosRouter, deleteAllVideosRouter } from './routers/video_router';
 
 
 export const app = express();
@@ -16,15 +16,12 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.use('/videos', videosRouter)
+app.use('/testing/all-data', deleteAllVideosRouter)
 
 
-let currentDate = new Date().toISOString();
-let publicPlusOneDey = new Date( Date.now() + (3600 * 1000 * 24)).toISOString();
-
-
-
-
-
+app.get('/', (req: Request, res: Response) => {
+    res.send('EXPRESS')
+})
 
 
   

@@ -3,7 +3,7 @@ import { HTTP_STATUSES } from "../HTTP/http_statuses";
 import {FieldErrorTupe} from '../models_types/errorType'
 
 export const videosRouter = Router({})
-
+export const deleteAllVideosRouter = Router({})
 
 
 
@@ -64,10 +64,11 @@ const db: {videos: VideosType[] } = {
 }
 
 
-
-videosRouter.get('/', (req: Request, res: Response) => {
-    res.send('EXPRESS')
+deleteAllVideosRouter.delete('/testing/all-data', ( req: Request, res: Response) => {
+    db.videos = []; 
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)  
 })
+
 
 videosRouter.get('/', (req: Request, res: Response<VideosType[]>) => {
     res.send(db.videos)
@@ -273,8 +274,4 @@ videosRouter.delete('/:id', (req: Request, res: Response) => {
     res.send(HTTP_STATUSES.NOT_FOUND_404) 
 })
 
-videosRouter.delete('/testing/all-data', ( req: Request, res: Response) => {
-    db.videos = []; 
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)  
-})
 
