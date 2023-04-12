@@ -56,7 +56,10 @@ exports.videosRouter.post('/', (req, res) => {
     const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
+    const canBeDownloaded = req.body.canBeDownloaded;
     const availableResolutions = req.body.availableResolutions;
+    const minAgeRestriction = req.body.minAgeRestriction;
+    const publicationDate = req.body.publicationDate;
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
         errors.errorsMessages.push({
             "message": "error",
@@ -91,7 +94,10 @@ exports.videosRouter.post('/', (req, res) => {
             id: +(new Date),
             title: title,
             author: author,
+            canBeDownloaded: canBeDownloaded,
             availableResolutions: availableResolutions,
+            minAgeRestriction: minAgeRestriction,
+            publicationDate: publicationDate,
         };
         console.log(newVideo);
         db.videos.push(newVideo);
