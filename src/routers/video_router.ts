@@ -1,24 +1,24 @@
 import { Request, Response, Router } from "express";
 import { HTTP_STATUSES } from "../HTTP/http_statuses";
 import {FieldErrorTupe} from '../models_types/errorType'
-//import { VideosType } from "../models_types/videoType";
+import { VideosType } from "../models_types/videoType";
 
 export const videosRouter = Router({})
 export const deleteAllVideosRouter = Router({})
 
 
 
-export type VideosType = {
-    id: number,
-    title: string,
-    author: string,
-    canBeDownloaded?: boolean,
-    minAgeRestriction?: number | null | undefined,
-    createdAt?: string,
-    publicationDate?: string,
-    availableResolutions: ResolutionsType
-}
-export type ResolutionsType = Array<string>
+// export type VideosType = {
+//     id: number,
+//     title: string,
+//     author: string,
+//     canBeDownloaded?: boolean,
+//     minAgeRestriction?: number | null | undefined,
+//     createdAt?: string,
+//     publicationDate?: string,
+//     availableResolutions: ResolutionsType
+// }
+// export type ResolutionsType = Array<string>
 
 
 const db: {videos: VideosType[] } = {
@@ -29,7 +29,7 @@ const db: {videos: VideosType[] } = {
             author: 'Николай Васильевич Гоголь',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             publicationDate:  new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144',
@@ -41,7 +41,7 @@ const db: {videos: VideosType[] } = {
             author: 'Пушкин Александр Сергеевич',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             publicationDate: new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240'
@@ -53,7 +53,7 @@ const db: {videos: VideosType[] } = {
             author: 'Шолохов Михаил Александрович',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(), 
+            createdAt: new Date().toISOString(), 
             publicationDate:new Date( Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160' 

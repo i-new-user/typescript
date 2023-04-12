@@ -3,9 +3,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAllVideosRouter = exports.videosRouter = void 0;
 const express_1 = require("express");
 const http_statuses_1 = require("../HTTP/http_statuses");
-//import { VideosType } from "../models_types/videoType";
 exports.videosRouter = (0, express_1.Router)({});
 exports.deleteAllVideosRouter = (0, express_1.Router)({});
+// export type VideosType = {
+//     id: number,
+//     title: string,
+//     author: string,
+//     canBeDownloaded?: boolean,
+//     minAgeRestriction?: number | null | undefined,
+//     createdAt?: string,
+//     publicationDate?: string,
+//     availableResolutions: ResolutionsType
+// }
+// export type ResolutionsType = Array<string>
 const db = {
     videos: [
         {
@@ -14,7 +24,7 @@ const db = {
             author: 'Николай Васильевич Гоголь',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144',
@@ -26,7 +36,7 @@ const db = {
             author: 'Пушкин Александр Сергеевич',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240'
@@ -38,7 +48,7 @@ const db = {
             author: 'Шолохов Михаил Александрович',
             canBeDownloaded: true,
             minAgeRestriction: null,
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
             availableResolutions: [
                 'P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'

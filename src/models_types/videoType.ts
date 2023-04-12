@@ -4,8 +4,8 @@ export type VideosType = {
     author: string,
     canBeDownloaded?: boolean,
     minAgeRestriction?: number | null | undefined,
-    createAt?: string,
+    createdAt?: string,
     publicationDate?: string,
-    availableReaolutions: ResolutionsType
+    availableResolutions: ResolutionsType
 }
 export type ResolutionsType = Array<string>
