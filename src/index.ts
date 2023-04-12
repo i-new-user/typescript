@@ -150,12 +150,13 @@ app.post('/videos', (req: Request, res: Response) => {
             id: +(new Date),
             title: title,
             author: author,
-            canBeDownloaded: canBeDownloaded,
+            canBeDownloaded: canBeDownloaded || false,
             minAgeRestriction: minAgeRestriction,
-            createAt: createAt,
+            createAt: createAt || new Date().toISOString(),
             publicationDate: publicationDate,
             availableResolutions: availableResolutions,
         }
+        console.log(newVideo)
         db.videos.push(newVideo)
         res.status(HTTP_STATUSES.CREATED_201).send(newVideo)
        
