@@ -82,10 +82,10 @@ videosRouter.post('/', (req: Request, res: Response) => {
     const title = req.body.title;
     const author = req.body.author;
      const availableResolutions = req.body.availableResolutions;
-    const canBeDownloaded = req.body.canBeDownloaded || true;
+    const canBeDownloaded = req.body.canBeDownloaded || false;
    
     const minAgeRestriction = req.body.minAgeRestriction || null;
-    const publicationDate = req.body.publicationDate || new Date().toISOString();
+    const publicationDate = req.body.publicationDate || new Date( Date.now() + (3600 * 1000 * 24)).toISOString();
 
     if(!title  || typeof title !== 'string' || title.trim() === '' || title.length > 40){
         errors.errorsMessages.push(
