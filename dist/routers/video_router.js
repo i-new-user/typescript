@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAllVideosRouter = exports.videosRouter = void 0;
 const express_1 = require("express");
 const http_statuses_1 = require("../HTTP/http_statuses");
+//import { VideosType } from "../models_types/videoType";
 exports.videosRouter = (0, express_1.Router)({});
 exports.deleteAllVideosRouter = (0, express_1.Router)({});
 const db = {
@@ -56,10 +57,10 @@ exports.videosRouter.post('/', (req, res) => {
     const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
-    const canBeDownloaded = req.body.canBeDownloaded;
     const availableResolutions = req.body.availableResolutions;
-    const minAgeRestriction = req.body.minAgeRestriction;
-    const publicationDate = req.body.publicationDate;
+    const canBeDownloaded = req.body.canBeDownloaded || true;
+    const minAgeRestriction = req.body.minAgeRestriction || null;
+    const publicationDate = req.body.publicationDate || new Date().toISOString();
     if (!title || typeof title !== 'string' || title.trim() === '' || title.length > 40) {
         errors.errorsMessages.push({
             "message": "error",
@@ -98,6 +99,7 @@ exports.videosRouter.post('/', (req, res) => {
             availableResolutions: availableResolutions,
             minAgeRestriction: minAgeRestriction,
             publicationDate: publicationDate,
+            createAt: new Date().toISOString()
         };
         console.log(newVideo);
         db.videos.push(newVideo);

@@ -8,4 +8,4 @@ export type VideosType = {
     publicationDate?: string,
     availableReaolutions: ResolutionsType
 }
-type ResolutionsType = Array<string>
+export type ResolutionsType = Array<string>

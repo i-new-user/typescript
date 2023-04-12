@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { HTTP_STATUSES } from "../HTTP/http_statuses";
 import {FieldErrorTupe} from '../models_types/errorType'
+//import { VideosType } from "../models_types/videoType";
 
 export const videosRouter = Router({})
 export const deleteAllVideosRouter = Router({})
@@ -80,10 +81,11 @@ videosRouter.post('/', (req: Request, res: Response) => {
 
     const title = req.body.title;
     const author = req.body.author;
-   const canBeDownloaded = req.body.canBeDownloaded;
-    const availableResolutions = req.body.availableResolutions;
-    const minAgeRestriction =req.body.minAgeRestriction;
-    const publicationDate = req.body.publicationDate;
+     const availableResolutions = req.body.availableResolutions;
+    const canBeDownloaded = req.body.canBeDownloaded || true;
+   
+    const minAgeRestriction = req.body.minAgeRestriction || null;
+    const publicationDate = req.body.publicationDate || new Date().toISOString();
 
     if(!title  || typeof title !== 'string' || title.trim() === '' || title.length > 40){
         errors.errorsMessages.push(
@@ -142,6 +144,7 @@ videosRouter.post('/', (req: Request, res: Response) => {
             availableResolutions: availableResolutions,
             minAgeRestriction: minAgeRestriction,
             publicationDate: publicationDate,
+            createAt: new Date().toISOString()
         }
         console.log(newVideo)
         db.videos.push(newVideo)
