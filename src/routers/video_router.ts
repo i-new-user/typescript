@@ -64,7 +64,7 @@ const db: {videos: VideosType[] } = {
 }
 
 
-deleteAllVideosRouter.delete('/testing/all-data', ( req: Request, res: Response) => {
+deleteAllVideosRouter.delete('/', ( req: Request, res: Response) => {
     db.videos = []; 
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)  
 })

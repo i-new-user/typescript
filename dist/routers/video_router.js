@@ -45,7 +45,7 @@ const db = {
         }
     ]
 };
-exports.deleteAllVideosRouter.delete('/testing/all-data', (req, res) => {
+exports.deleteAllVideosRouter.delete('/', (req, res) => {
     db.videos = [];
     res.sendStatus(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });
