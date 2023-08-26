@@ -5,17 +5,6 @@ const express_1 = require("express");
 const http_statuses_1 = require("../HTTP/http_statuses");
 exports.videosRouter = (0, express_1.Router)({});
 exports.deleteAllVideosRouter = (0, express_1.Router)({});
-// export type VideosType = {
-//     id: number,
-//     title: string,
-//     author: string,
-//     canBeDownloaded?: boolean,
-//     minAgeRestriction?: number | null | undefined,
-//     createdAt?: string,
-//     publicationDate?: string,
-//     availableResolutions: ResolutionsType
-// }
-// export type ResolutionsType = Array<string>
 const db = {
     videos: [
         {
@@ -62,8 +51,8 @@ exports.deleteAllVideosRouter.delete('/', (req, res) => {
 });
 exports.videosRouter.get('/', (req, res) => {
     res.send(db.videos);
-});
-exports.videosRouter.post('/', (req, res) => {
+})
+    .post('/', (req, res) => {
     const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
@@ -115,8 +104,8 @@ exports.videosRouter.post('/', (req, res) => {
         db.videos.push(newVideo);
         res.status(http_statuses_1.HTTP_STATUSES.CREATED_201).send(newVideo);
     }
-});
-exports.videosRouter.put('/:id', (req, res) => {
+})
+    .put('/:id', (req, res) => {
     const errors = { errorsMessages: [] };
     const title = req.body.title;
     const author = req.body.author;
@@ -178,18 +167,21 @@ exports.videosRouter.put('/:id', (req, res) => {
             console.log(video);
         res.send(http_statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
-});
-exports.videosRouter.get('/:id', (req, res) => {
+})
+    .get('/:id', (req, res) => {
     const video = db.videos.find(v => v.id === +req.params.id);
     // console.log(video)
     if (!video) {
+        console.log(req.query.id);
+        console.log(req.body.title);
+        console.log(req.body.author);
         res.send(http_statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
     else {
         res.status(http_statuses_1.HTTP_STATUSES.OK_200).send(video);
     }
-});
-exports.videosRouter.delete('/:id', (req, res) => {
+})
+    .delete('/:id', (req, res) => {
     for (let i = 0; i < db.videos.length; i++) {
         if (db.videos[i].id === +req.params.id) {
             db.videos.splice(i, 1);

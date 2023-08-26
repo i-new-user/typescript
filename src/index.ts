@@ -1,30 +1,44 @@
-import express, {Request, Response, NextFunction} from 'express'
-import { HTTP_STATUSES } from './HTTP/http_statuses';
-import { CreateVideoInputModelType } from './models_types/createVideoType'
-import {FieldErrorTupe} from './models_types/errorType'
+import express, { Request, Response, NextFunction} from 'express'
+import { port } from './server'
+import { check, body } from 'express-validator'
 
-import bodyParser from 'body-parser';
+import { blogsRouter } from './routers/blogs_routers'
+import { postsRouter } from './routers/posts_routers'
+import { testingRouter } from './routers/testing_routers'
+
 import cors from 'cors'
-import { videosRouter, deleteAllVideosRouter } from './routers/video_router';
+import bodyParser from 'body-parser'
+
+export const app = express()
+// export const port = 3001
 
 
-export const app = express();
-const PORT =  process.env.PORT || 3000;
+app.use( cors() )
+app.use( bodyParser.json() )
 
 
-app.use(bodyParser.json())
-app.use(cors())
 
-app.use('/videos', videosRouter)
-app.use('/testing/all-data', deleteAllVideosRouter)
+export const ROUTER_PATH = {
+  blogs: '/blogs',
+  posts: '/posts',
+  test: '/__test__/data'
+}
+
+app.use(ROUTER_PATH.blogs, blogsRouter)
+app.use(ROUTER_PATH.posts, postsRouter)
+app.use(ROUTER_PATH.test, testingRouter)
+
+
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('EXPRESS')
+  console.log(req.headers.authorization)
+  let helloMessage = 'Hello World!'
+  res.send(helloMessage)
 })
 
 
-  
-app.listen(PORT, () => {
-    console.log("START EXPRESS")
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 })
