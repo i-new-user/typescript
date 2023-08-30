@@ -3,6 +3,8 @@ import { app } from '..'
 import { HTTP_STATUSES } from '../http/statuses'
 import { ROUTER_PATH } from '..'
 
+import { BlogInputModel } from '../models/blogs/input_model'
+
 
 
 //создает блок который группирует несколько связанных тестов
@@ -55,16 +57,17 @@ describe('test for /blogs', () => {
     let newEntity2: any = null
 
     it('should create entity1 with correct input data', async () => {
+
+        const data: BlogInputModel = { 
+            name: 'name',
+            description: 'description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }
+
         const respons = await request(app)
             .post(ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: 'name',
-                  description: 'description',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
+            .send( data )
             .expect(HTTP_STATUSES.CREATED_201)
          
         
@@ -75,9 +78,9 @@ describe('test for /blogs', () => {
         expect(newEntity1).toEqual(
             {
                 id: expect.any(String),
-                name: 'name',
-                description: 'description',
-                websiteUrl: 'https://samurai.it-incubator.io/' 
+                name: newEntity1.name,
+                description: newEntity1.description,
+                websiteUrl: newEntity1.websiteUrl
             }
         )
 
@@ -90,16 +93,19 @@ describe('test for /blogs', () => {
 
 
     it('should create entity2 with correct input data', async () => {
+
+
+        const data: BlogInputModel = { 
+            name: 'name',
+            description: 'description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }
+
+
         const respons = await request(app)
             .post(ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: 'name 22222',
-                  description: 'description 22222',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
+            .send( data )
             .expect(HTTP_STATUSES.CREATED_201)
 
          
@@ -109,9 +115,9 @@ describe('test for /blogs', () => {
         expect(newEntity2).toEqual(
                 {
                     id: expect.any(String),
-                    name: 'name 22222',
-                    description: 'description 22222',
-                    websiteUrl: 'https://samurai.it-incubator.io/' 
+                    name: newEntity2.name,
+                    description: newEntity2.description,
+                    websiteUrl: newEntity2.websiteUrl 
                 }
             )
             
@@ -123,16 +129,18 @@ describe('test for /blogs', () => {
 
   
     it('should not update entity with incorrect input data', async () => {
+
+        const data: BlogInputModel = { 
+            name: 'name',
+            description: '',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }  
+
+
         await request(app)
             .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: 'name',
-                  description: '',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
+            .send( data )
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
          
 
@@ -144,6 +152,7 @@ describe('test for /blogs', () => {
 
 
     it('should not update entity that not exist', async () => {
+
         await request(app)
             .put(`${ROUTER_PATH.blogs}/17`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
@@ -160,16 +169,18 @@ describe('test for /blogs', () => {
    
 
     it('should  update entity with correct input data', async () => {
+
+        const data: BlogInputModel = { 
+            name: 'update name',
+            description: 'update description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }
+
+
         await request(app)
             .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: 'update name',
-                  description: 'update description',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
+            .send( data )
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
@@ -178,9 +189,9 @@ describe('test for /blogs', () => {
             .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
             .expect(HTTP_STATUSES.OK_200,
                                 {   ...newEntity1,
-                                    name: 'update name',
-                                    description: 'update description',
-                                    websiteUrl: 'https://samurai.it-incubator.io/'
+                                    name: data.name,
+                                    description: data.description,
+                                    websiteUrl: data.websiteUrl
                                 }
         )
 
@@ -188,9 +199,9 @@ describe('test for /blogs', () => {
             .get(ROUTER_PATH.blogs)
             .expect(HTTP_STATUSES.OK_200, [
                 {   ...newEntity1,
-                    name: 'update name',
-                    description: 'update description',
-                    websiteUrl: 'https://samurai.it-incubator.io/'
+                    name: data.name,
+                    description: data.description,
+                    websiteUrl: data.websiteUrl
                 }, 
                 newEntity2])
 

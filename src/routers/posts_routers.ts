@@ -96,7 +96,7 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   
  
   
-.delete('testing/all-date', 
+.delete('/testing/all-date', 
 
   basicAuth, 
   
