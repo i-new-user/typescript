@@ -1,8 +1,10 @@
 
 import { Request, Response, Router } from "express";
-import { body, validationResult } from "express-validator";
+import { ROUTER_PATH } from "..";
 
 import { HTTP_STATUSES } from "../http/statuses";
+
+import { body, validationResult } from "express-validator";
 
 import { PostViewModel } from "../models/posts/view_model";
 import { PostInputModel } from "../models/posts/input_model";
@@ -94,7 +96,7 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   
   
   
-.delete('/__test__/data', 
+.delete(ROUTER_PATH.test, 
 
   basicAuth, 
   

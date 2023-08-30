@@ -22,7 +22,7 @@ export const ROUTER_PATH = {
   blogs: '/blogs',
   posts: '/posts',
 
-  test: '/__test__/data'
+  test: '/testing/all-data'
 }
 
 app.use(ROUTER_PATH.blogs, blogsRouter)
