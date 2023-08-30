@@ -1,6 +1,6 @@
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH } from "..";
+import { ROUTER_PATH, RouterPathType } from "..";
 
 import { HTTP_STATUSES } from "../http/statuses";
 
@@ -94,9 +94,9 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   
 })  
   
+ 
   
-  
-.delete(ROUTER_PATH.test, 
+.delete('testing/all-date', 
 
   basicAuth, 
   

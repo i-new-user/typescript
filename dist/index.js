@@ -17,12 +17,13 @@ exports.app.use(body_parser_1.default.json());
 exports.ROUTER_PATH = {
     blogs: '/blogs',
     posts: '/posts',
-    test: '/__test__/data'
+    test: '/testing/all-data'
 };
 exports.app.use(exports.ROUTER_PATH.blogs, blogs_routers_1.blogsRouter);
 exports.app.use(exports.ROUTER_PATH.posts, posts_routers_1.postsRouter);
 exports.app.use(exports.ROUTER_PATH.test, testing_routers_1.testingRouter);
 exports.app.get('/', (req, res) => {
+    console.log(exports.ROUTER_PATH.test);
     res.send('Hello World!');
 });
 exports.app.listen(exports.port, () => {

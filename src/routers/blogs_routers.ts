@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH } from '..';
+import { ROUTER_PATH, RouterPathType } from '..';
 
 import { HTTP_STATUSES } from "../http/statuses";
 
@@ -96,7 +96,7 @@ blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewMode
 
 
 
-.delete(ROUTER_PATH.test,
+.delete('/testing/all-data',
 
   basicAuth, 
 

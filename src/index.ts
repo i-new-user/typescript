@@ -16,9 +16,13 @@ export const port = 3001
 app.use( cors() )
 app.use( bodyParser.json() )
 
+export type RouterPathType = {
+  blogs: string
+  posts: string
+  test: string
+}
 
-
-export const ROUTER_PATH = {
+export const ROUTER_PATH: RouterPathType = {
   blogs: '/blogs',
   posts: '/posts',
 
@@ -33,6 +37,7 @@ app.use(ROUTER_PATH.test, testingRouter)
 
 
 app.get('/', (req: Request, res: Response) => {
+  console.log(ROUTER_PATH.test)
   res.send('Hello World!')
 })
 

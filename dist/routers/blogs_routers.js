@@ -47,6 +47,6 @@ exports.blogsRouter.get('/', (req, res) => {
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 })
-    .delete('/__test__/data', basic_auth_1.basicAuth, (req, res) => {
+    .delete('/testing/all-data', basic_auth_1.basicAuth, (req, res) => {
     res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });
