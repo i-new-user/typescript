@@ -103,4 +103,3 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   (req: Request, res: Response) => {
     res.send(HTTP_STATUSES.NO_CONTENT_204)
 })
-  
