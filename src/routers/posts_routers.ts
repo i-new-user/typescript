@@ -65,18 +65,11 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   
 .post('/', 
 
-  basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, inputValidation,
+  basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, isBlogCustomValid, inputValidation,
   
   (req: ReqBody<PostViewModel>, res: Response<PostViewModel>)  => {
- 
-  const {id, title, shortDescription, content, blogId, blogName} = req.body
-  const blog = blogsRepository.findBlogById(blogId)
- 
   
-
-  if(!blog){
-    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-  }
+  const {id, title, shortDescription, content, blogId, blogName} = req.body
       
   let newPosts = postsRepository.createPost( id, title, shortDescription, content, blogId, blogName )
       res.status(HTTP_STATUSES.CREATED_201).send(newPosts)
