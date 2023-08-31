@@ -1,5 +1,5 @@
-import { PostViewModel } from "../models/posts/view_model";
-import { PostInputModel } from "../models/posts/input_model";
+import { PostViewModel } from "../features/posts/models/view_model";
+import { PostInputModel } from "../features/posts/models/input_model";
 
 let posts: PostViewModel[] = [
     { 

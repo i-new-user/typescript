@@ -49,56 +49,59 @@ describe('test for /blogs', () => {
     let newEntity1 = null;
     let newEntity2 = null;
     it('should create entity1 with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
-        const respons = yield (0, supertest_1.default)(__1.app)
-            .post(__2.ROUTER_PATH.blogs)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send({
+        const data = {
             name: 'name',
             description: 'description',
             websiteUrl: 'https://samurai.it-incubator.io/'
-        })
+        };
+        const respons = yield (0, supertest_1.default)(__1.app)
+            .post(__2.ROUTER_PATH.blogs)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send(data)
             .expect(statuses_1.HTTP_STATUSES.CREATED_201);
         newEntity1 = respons.body;
         expect(newEntity1).toEqual({
             id: expect.any(String),
-            name: 'name',
-            description: 'description',
-            websiteUrl: 'https://samurai.it-incubator.io/'
+            name: newEntity1.name,
+            description: newEntity1.description,
+            websiteUrl: newEntity1.websiteUrl
         });
         yield (0, supertest_1.default)(__1.app)
             .get(__2.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [newEntity1]);
     }));
     it('should create entity2 with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            name: 'name',
+            description: 'description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        };
         const respons = yield (0, supertest_1.default)(__1.app)
             .post(__2.ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send({
-            name: 'name 22222',
-            description: 'description 22222',
-            websiteUrl: 'https://samurai.it-incubator.io/'
-        })
+            .send(data)
             .expect(statuses_1.HTTP_STATUSES.CREATED_201);
         newEntity2 = respons.body;
         expect(newEntity2).toEqual({
             id: expect.any(String),
-            name: 'name 22222',
-            description: 'description 22222',
-            websiteUrl: 'https://samurai.it-incubator.io/'
+            name: newEntity2.name,
+            description: newEntity2.description,
+            websiteUrl: newEntity2.websiteUrl
         });
         yield (0, supertest_1.default)(__1.app)
             .get(__2.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [newEntity1, newEntity2]);
     }));
     it('should not update entity with incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send({
+        const data = {
             name: 'name',
             description: '',
             websiteUrl: 'https://samurai.it-incubator.io/'
-        })
+        };
+        yield (0, supertest_1.default)(__1.app)
+            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send(data)
             .expect(statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
         yield (0, supertest_1.default)(__1.app)
             .get(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
@@ -116,22 +119,23 @@ describe('test for /blogs', () => {
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     it('should  update entity with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send({
+        const data = {
             name: 'update name',
             description: 'update description',
             websiteUrl: 'https://samurai.it-incubator.io/'
-        })
+        };
+        yield (0, supertest_1.default)(__1.app)
+            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send(data)
             .expect(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
         yield (0, supertest_1.default)(__1.app)
             .get(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
-            .expect(statuses_1.HTTP_STATUSES.OK_200, Object.assign(Object.assign({}, newEntity1), { name: 'update name', description: 'update description', websiteUrl: 'https://samurai.it-incubator.io/' }));
+            .expect(statuses_1.HTTP_STATUSES.OK_200, Object.assign(Object.assign({}, newEntity1), { name: data.name, description: data.description, websiteUrl: data.websiteUrl }));
         yield (0, supertest_1.default)(__1.app)
             .get(__2.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [
-            Object.assign(Object.assign({}, newEntity1), { name: 'update name', description: 'update description', websiteUrl: 'https://samurai.it-incubator.io/' }),
+            Object.assign(Object.assign({}, newEntity1), { name: data.name, description: data.description, websiteUrl: data.websiteUrl }),
             newEntity2
         ]);
         yield (0, supertest_1.default)(__1.app)

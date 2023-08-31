@@ -1,5 +1,5 @@
-import { BlogViewModel } from './../models/blogs/view_model';
-import { BlogInputModel } from '../models/blogs/input_model';
+import { BlogViewModel } from '../features/blogs/models/view_model';
+import { BlogInputModel } from '../features/blogs/models/input_model';
 
 
 let blogs: BlogViewModel[] = [

@@ -2,15 +2,15 @@ import express, { Request, Response, NextFunction} from 'express'
 
 import { check, body } from 'express-validator'
 
-import { blogsRouter } from './routers/blogs_routers'
-import { postsRouter } from './routers/posts_routers'
-import { testingRouter } from './routers/testing_routers'
+import { blogsRouter } from './features/blogs/blogs_routers'
+import { postsRouter } from './features/posts/posts_routers'
+import { testingRouter } from './features/testing_routers'
 
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
 export const app = express()
-export const port = 3001
+export const port = 3000
 
 
 app.use( cors() )
@@ -43,6 +43,6 @@ app.get('/', (req: Request, res: Response) => {
 
 
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})

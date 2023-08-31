@@ -1,26 +1,26 @@
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH, RouterPathType } from "..";
+import { ROUTER_PATH, RouterPathType } from "../..";
 
-import { HTTP_STATUSES } from "../http/statuses";
+import { HTTP_STATUSES } from "../../http/statuses";
 
 import { body, validationResult } from "express-validator";
 
-import { PostViewModel } from "../models/posts/view_model";
-import { PostInputModel } from "../models/posts/input_model";
+import { PostViewModel } from "./models/view_model";
+import { PostInputModel } from "./models/input_model";
 
-import { GetById } from "../types/posts/get_by_id";
-import { ReqBody } from "../types/posts/req_body";
-import { ReqParamsAndBodyPost } from "../types/posts/req_params_and_body";
-import { ReqParams } from "../types/posts/req_params";
-import { ReqQuery } from "../types/posts/req_query";
+import { GetById } from "../../types/posts/get_by_id";
+import { ReqBody } from "../../types/posts/req_body";
+import { ReqParamsAndBodyPost } from "../../types/posts/req_params_and_body";
+import { ReqParams } from "../../types/posts/req_params";
+import { ReqQuery } from "../../types/posts/req_query";
 
-import { postsRepository } from "../repositories/posts_repositoriy";
-import { blogsRepository } from "../repositories/blogs_repositoriy";
+import { postsRepository } from "../../repositories/posts_repositoriy";
+import { blogsRepository } from "../../repositories/blogs_repositoriy";
 
-import { basicAuth } from "../middleware/basic_auth";
-import { inputValidation } from "../middleware/input_validator";
-import { isBlogCustomValid } from "../middleware/blog_custom_validator";
+import { basicAuth } from "../../middleware/basic_auth";
+import { inputValidation } from "../../middleware/input_validator";
+import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
 
 
 export const postsRouter = Router({})

@@ -1,7 +1,7 @@
 import request from 'supertest'
-import { app } from '..'
-import { HTTP_STATUSES } from '../http/statuses'
-import { ROUTER_PATH } from '..'
+import { app } from '../..'
+import { HTTP_STATUSES } from '../../http/statuses'
+import { ROUTER_PATH } from '../..'
 
 
 

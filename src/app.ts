@@ -1,10 +1,10 @@
-import { app } from ".";
+// import { app } from ".";
 
-const port = 3001
+// const port = 3001
 
 
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//     console.log(`Example app listening on port ${port}`)
+// })
   

@@ -1,24 +1,24 @@
 import { body, validationResult } from 'express-validator';
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH, RouterPathType } from '..';
+import { ROUTER_PATH, RouterPathType } from '../..';
 
-import { HTTP_STATUSES } from "../http/statuses";
+import { HTTP_STATUSES } from "../../http/statuses";
 
-import { BlogViewModel } from "../models/blogs/view_model";
-import { BlogInputModel } from './../models/blogs/input_model';
+import { BlogViewModel } from "./models/view_model";
+import { BlogInputModel } from './models/input_model';
 
 
-import { ReqBody } from "../types/blogs/req_body";
-import { ReqParams } from "../types/blogs/req_params";
-import { ReqParamsAndBody } from "../types/blogs/req_params_and_body";
-import { ReqQuery } from "../types/blogs/req_query";
-import { GetById } from "../types/blogs/get_by_id";
+import { ReqBody } from "../../types/blogs/req_body";
+import { ReqParams } from "../../types/blogs/req_params";
+import { ReqParamsAndBody } from "../../types/blogs/req_params_and_body";
+import { ReqQuery } from "../../types/blogs/req_query";
+import { GetById } from "../../types/blogs/get_by_id";
 
-import { blogsRepository } from "../repositories/blogs_repositoriy";
+import { blogsRepository } from "../../repositories/blogs_repositoriy";
 
-import { basicAuth } from "../middleware/basic_auth";
-import { inputValidation } from '../middleware/input_validator';
+import { basicAuth } from "../../middleware/basic_auth";
+import { inputValidation } from '../../middleware/input_validator';
 
 
 

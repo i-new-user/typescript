@@ -1,9 +1,9 @@
 import request from 'supertest'
-import { app } from '..'
-import { HTTP_STATUSES } from '../http/statuses'
-import { ROUTER_PATH } from '..'
+import { app } from '../..'
+import { HTTP_STATUSES } from '../../http/statuses'
+import { ROUTER_PATH } from '../..'
 
-import { BlogInputModel } from '../models/blogs/input_model'
+import { BlogInputModel } from './models/input_model'
 
 
 
