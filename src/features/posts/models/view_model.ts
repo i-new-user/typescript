@@ -6,3 +6,4 @@ export type PostViewModel = {
     blogId:	string
     blogName:	string
 }
+

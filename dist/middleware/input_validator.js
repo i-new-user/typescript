@@ -6,8 +6,11 @@ const express_validator_1 = require("express-validator");
 const inputValidation = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        return res.status(statuses_1.HTTP_STATUSES.BAD_REQUEST_400).json({ errorsMessages: errors.array({ onlyFirstError: false })
-        });
+        const errorsMessages = errors.array({ onlyFirstError: true }).map((elem) => ({
+            message: elem.msg,
+            field: elem.path
+        }));
+        return res.status(statuses_1.HTTP_STATUSES.BAD_REQUEST_400).json({ errorsMessages });
     }
     return next();
 };

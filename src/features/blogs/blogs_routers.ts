@@ -1,7 +1,7 @@
 import { body, validationResult } from 'express-validator';
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH, RouterPathType } from '../..';
+import { ROUTER_PATH, RouterPathType } from '../../app';
 
 import { HTTP_STATUSES } from "../../http/statuses";
 

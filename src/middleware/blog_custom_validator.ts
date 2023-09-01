@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, validationResult } from "express-validator";
 import { blogsRepository } from "../repositories/blogs_repositoriy";
 
 export const isBlogCustomValid = body('blogId').custom( (blogId) => {
