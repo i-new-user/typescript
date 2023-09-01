@@ -5,13 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ROUTER_PATH = exports.port = exports.app = void 0;
 const express_1 = __importDefault(require("express"));
-const blogs_routers_1 = require("./routers/blogs_routers");
-const posts_routers_1 = require("./routers/posts_routers");
-const testing_routers_1 = require("./routers/testing_routers");
+const blogs_routers_1 = require("./features/blogs/blogs_routers");
+const posts_routers_1 = require("./features/posts/posts_routers");
+const testing_routers_1 = require("./features/testing_routers");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 exports.app = (0, express_1.default)();
-exports.port = 3001;
+exports.port = 3000;
 exports.app.use((0, cors_1.default)());
 exports.app.use(body_parser_1.default.json());
 exports.ROUTER_PATH = {

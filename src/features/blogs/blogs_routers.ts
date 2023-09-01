@@ -9,11 +9,11 @@ import { BlogViewModel } from "./models/view_model";
 import { BlogInputModel } from './models/input_model';
 
 
-import { ReqBody } from "../../types/blogs/req_body";
-import { ReqParams } from "../../types/blogs/req_params";
-import { ReqParamsAndBody } from "../../types/blogs/req_params_and_body";
-import { ReqQuery } from "../../types/blogs/req_query";
-import { GetById } from "../../types/blogs/get_by_id";
+import { ReqBody } from "./models/req_body";
+import { ReqParams } from "./models/req_params";
+import { ReqParamsAndBody } from "./models/req_params_and_body";
+import { ReqQuery } from "./models/req_query";
+import { GetById } from "./models/get_by_id";
 
 import { blogsRepository } from "../../repositories/blogs_repositoriy";
 
@@ -27,7 +27,11 @@ export const blogsRouter = Router({})
 
 let nameValid = body('name').isString().trim().isLength({min: 1, max:15})
 let descriptionValid = body('description').trim().isString().isLength({min: 1, max:500})
-let websiteUrlValid = body('websiteUrl').trim().isString().isLength({min: 1, max:100})
+let websiteUrlValid = body('websiteUrl').trim().isString().isLength({min: 1, max:100}).matches('^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
+ 
+
+
+
 
 blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewModel[]>)  => {
 

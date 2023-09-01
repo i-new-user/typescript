@@ -9,11 +9,11 @@ import { body, validationResult } from "express-validator";
 import { PostViewModel } from "./models/view_model";
 import { PostInputModel } from "./models/input_model";
 
-import { GetById } from "../../types/posts/get_by_id";
-import { ReqBody } from "../../types/posts/req_body";
-import { ReqParamsAndBodyPost } from "../../types/posts/req_params_and_body";
-import { ReqParams } from "../../types/posts/req_params";
-import { ReqQuery } from "../../types/posts/req_query";
+import { GetById } from "./models/get_by_id";
+import { ReqBody } from "./models/req_body";
+import { ReqParamsAndBodyPost } from "./models/req_params_and_body";
+import { ReqParams } from "./models/req_params";
+import { ReqQuery } from "./models/req_query";
 
 import { postsRepository } from "../../repositories/posts_repositoriy";
 import { blogsRepository } from "../../repositories/blogs_repositoriy";
