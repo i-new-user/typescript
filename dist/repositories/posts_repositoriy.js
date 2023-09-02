@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
+const blogs_repositoriy_1 = require("./blogs_repositoriy");
 let posts = [
     {
         id: '1', title: 'Французские галеты с абрикосами',
@@ -59,14 +60,15 @@ exports.postsRepository = {
     findPostById(id) {
         return posts.find(post => id === post.id);
     },
-    createPost(id, title, shortDescription, content, blogId, blogName) {
+    createPost(title, shortDescription, content, blogId) {
+        const blog = blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
         const newPost = {
             id: String(+(new Date())),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName
+            blogName: blog.name
         };
         posts.push(newPost);
         return newPost;

@@ -1,5 +1,7 @@
+import { blogsRepository } from './blogs_repositoriy';
 import { PostViewModel } from "../features/posts/models/view_model";
 import { PostInputModel } from "../features/posts/models/input_model";
+
 
 let posts: PostViewModel[] = [
     { 
@@ -65,14 +67,15 @@ export const postsRepository = {
         return posts.find(post => id === post.id)
     },
 
-    createPost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string){
+    createPost(title: string, shortDescription: string, content: string, blogId: string){
+        const blog = blogsRepository.findBlogById(blogId)
         const newPost: PostViewModel = {
             id: String(+ (new Date()) ),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName
+            blogName: blog!.name
           }
           posts.push(newPost)
           return newPost

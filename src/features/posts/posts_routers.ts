@@ -71,21 +71,21 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
   
   (req: ReqBody<PostViewModel>, res: Response<PostViewModel>)  => {
   
-  const {id, title, shortDescription, content, blogId, blogName} = req.body
+  const { title, shortDescription, content, blogId} = req.body
       
-  let newPosts = postsRepository.createPost( id, title, shortDescription, content, blogId, blogName )
+  let newPosts = postsRepository.createPost(title, shortDescription, content, blogId)
       res.status(HTTP_STATUSES.CREATED_201).send(newPosts)
 })
   
   
 .put('/:id', 
 
-  basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, inputValidation,
+  basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, isBlogCustomValid, inputValidation,
   
   ( req: ReqParamsAndBodyPost<GetById, PostInputModel>, res: Response<PostViewModel>)  => {
   
   let isUpdate = postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
-    
+  
   if(isUpdate){
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
   } else {

@@ -13,23 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const __1 = require("../..");
+const app_1 = require("../../app");
 const statuses_1 = require("../../http/statuses");
-const __2 = require("../..");
 //создает блок который группирует несколько связанных тестов
 describe('test for /posts', () => {
     //запускает функцию перед каждым тестом в этом файле
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app).delete(__2.ROUTER_PATH.test);
+        yield (0, supertest_1.default)(app_1.app).delete(app_1.ROUTER_PATH.test);
     }));
     it('should return 200 and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.posts)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.posts)
             .expect(statuses_1.HTTP_STATUSES.OK_200, []);
     }));
     it('should return 404 for not existing entity', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.posts}/1`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.posts}/1`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     // it('should not create entity with incorrect input data', async () => {

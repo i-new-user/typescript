@@ -13,28 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const __1 = require("../..");
+const app_1 = require("../../app");
 const statuses_1 = require("../../http/statuses");
-const __2 = require("../..");
 //создает блок который группирует несколько связанных тестов
 describe('test for /blogs', () => {
     //запускает функцию перед каждым тестом в этом файле
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app).delete(__2.ROUTER_PATH.test);
+        yield (0, supertest_1.default)(app_1.app).delete(app_1.ROUTER_PATH.test);
     }));
     it('should return 200 and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, []);
     }));
     it('should return 404 for not existing entity', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/1`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/1`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     it('should not create entity with incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .post(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .post(app_1.ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send({
             name: '',
@@ -42,8 +41,8 @@ describe('test for /blogs', () => {
             websiteUrl: 'https://samurai.it-incubator.io/'
         })
             .expect(statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, []);
     }));
     let newEntity1 = null;
@@ -54,8 +53,8 @@ describe('test for /blogs', () => {
             description: 'description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         };
-        const respons = yield (0, supertest_1.default)(__1.app)
-            .post(__2.ROUTER_PATH.blogs)
+        const respons = yield (0, supertest_1.default)(app_1.app)
+            .post(app_1.ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send(data)
             .expect(statuses_1.HTTP_STATUSES.CREATED_201);
@@ -66,8 +65,8 @@ describe('test for /blogs', () => {
             description: newEntity1.description,
             websiteUrl: newEntity1.websiteUrl
         });
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [newEntity1]);
     }));
     it('should create entity2 with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,8 +75,8 @@ describe('test for /blogs', () => {
             description: 'description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         };
-        const respons = yield (0, supertest_1.default)(__1.app)
-            .post(__2.ROUTER_PATH.blogs)
+        const respons = yield (0, supertest_1.default)(app_1.app)
+            .post(app_1.ROUTER_PATH.blogs)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send(data)
             .expect(statuses_1.HTTP_STATUSES.CREATED_201);
@@ -88,8 +87,8 @@ describe('test for /blogs', () => {
             description: newEntity2.description,
             websiteUrl: newEntity2.websiteUrl
         });
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [newEntity1, newEntity2]);
     }));
     it('should not update entity with incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -98,18 +97,18 @@ describe('test for /blogs', () => {
             description: '',
             websiteUrl: 'https://samurai.it-incubator.io/'
         };
-        yield (0, supertest_1.default)(__1.app)
-            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .put(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send(data)
             .expect(statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .expect(statuses_1.HTTP_STATUSES.OK_200, newEntity1);
     }));
     it('should not update entity that not exist', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .put(`${__2.ROUTER_PATH.blogs}/17`)
+        yield (0, supertest_1.default)(app_1.app)
+            .put(`${app_1.ROUTER_PATH.blogs}/17`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send({
             name: 'name',
@@ -124,41 +123,41 @@ describe('test for /blogs', () => {
             description: 'update description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         };
-        yield (0, supertest_1.default)(__1.app)
-            .put(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .put(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send(data)
             .expect(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .expect(statuses_1.HTTP_STATUSES.OK_200, Object.assign(Object.assign({}, newEntity1), { name: data.name, description: data.description, websiteUrl: data.websiteUrl }));
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, [
             Object.assign(Object.assign({}, newEntity1), { name: data.name, description: data.description, websiteUrl: data.websiteUrl }),
             newEntity2
         ]);
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/${newEntity2.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/${newEntity2.id}`)
             .expect(statuses_1.HTTP_STATUSES.OK_200, newEntity2);
     }));
     it('should delete both entityes', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(__1.app)
-            .delete(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .delete(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .expect(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/${newEntity1.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/${newEntity1.id}`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-        yield (0, supertest_1.default)(__1.app)
-            .delete(`${__2.ROUTER_PATH.blogs}/${newEntity2.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .delete(`${app_1.ROUTER_PATH.blogs}/${newEntity2.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .expect(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-        yield (0, supertest_1.default)(__1.app)
-            .get(`${__2.ROUTER_PATH.blogs}/${newEntity2.id}`)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(`${app_1.ROUTER_PATH.blogs}/${newEntity2.id}`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-        yield (0, supertest_1.default)(__1.app)
-            .get(__2.ROUTER_PATH.blogs)
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.blogs)
             .expect(statuses_1.HTTP_STATUSES.OK_200, []);
     }));
 });

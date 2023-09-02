@@ -36,11 +36,11 @@ exports.postsRouter.get('/', (req, res) => {
     }
 })
     .post('/', basic_auth_1.basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, blog_custom_validator_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => {
-    const { id, title, shortDescription, content, blogId, blogName } = req.body;
-    let newPosts = posts_repositoriy_1.postsRepository.createPost(id, title, shortDescription, content, blogId, blogName);
+    const { title, shortDescription, content, blogId } = req.body;
+    let newPosts = posts_repositoriy_1.postsRepository.createPost(title, shortDescription, content, blogId);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newPosts);
 })
-    .put('/:id', basic_auth_1.basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, input_validator_1.inputValidation, (req, res) => {
+    .put('/:id', basic_auth_1.basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, blog_custom_validator_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => {
     let isUpdate = posts_repositoriy_1.postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (isUpdate) {
         res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
