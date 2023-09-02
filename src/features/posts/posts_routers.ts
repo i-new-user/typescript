@@ -1,10 +1,10 @@
 
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH, RouterPathType } from "../../app";
+
 
 import { HTTP_STATUSES } from "../../http/statuses";
 
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 
 import { PostViewModel } from "./models/view_model";
 import { PostInputModel } from "./models/input_model";
