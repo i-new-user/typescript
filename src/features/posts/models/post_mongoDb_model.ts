@@ -1,5 +1,7 @@
-export type PostViewModel = {
-    id:	string
+import { ObjectId } from "mongodb"
+
+export type PostMongoDBModel = {
+    _id: ObjectId
     title:	string
     shortDescription:	string
     content:	string
@@ -7,4 +9,3 @@ export type PostViewModel = {
     blogName:	string
     createdAt: string
 }
-

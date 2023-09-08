@@ -7,6 +7,7 @@ import { HTTP_STATUSES } from "../../http/statuses";
 
 import { BlogViewModel } from "./models/view_model";
 import { BlogInputModel } from './models/input_model';
+import { BlogModel } from './models/blog_model';
 
 
 import { ReqBody } from "./models/req_body";
@@ -29,23 +30,23 @@ let nameValid = body('name').isString().trim().isLength({min: 1, max:15})
 let descriptionValid = body('description').trim().isString().isLength({min: 1, max:500})
 let websiteUrlValid = body('websiteUrl').trim().isString().isLength({min: 1, max:100}).matches('^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
  
+                                                                                                  
 
 
 
+blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogViewModel[]>)  => {
 
-blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewModel[]>)  => {
-
-    let blogs = blogsRepository.findBlogs()
-    res.send(blogs)
+    let foundEntityes: BlogModel[] = await blogsRepository.findBlogs()
+    res.send(foundEntityes)
 })
 
 
-.get('/:id', ( req: ReqParams<GetById >, res: Response<BlogViewModel>)  => {
+.get('/:id', async ( req: ReqParams<GetById >, res: Response<BlogViewModel>)  => {
 
-  let blog = blogsRepository.findBlogById(req.params.id)
+  let foundEntity: BlogModel | null | undefined = await blogsRepository.findBlogById(req.params.id)
  
-  if(blog){
-    res.send(blog)
+  if(foundEntity){
+    res.send(foundEntity)
   } else {
     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
@@ -57,9 +58,9 @@ blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewMode
 
   basicAuth,
 
-  (req: ReqParams<GetById>, res: Response)  => {
+  async (req: ReqParams<GetById>, res: Response)  => {
 
-  let isDeleted = blogsRepository.deleteBlog(req.params.id)
+  let isDeleted = await blogsRepository.deleteBlog(req.params.id)
 
   if(isDeleted){
     res.send(HTTP_STATUSES.NO_CONTENT_204)
@@ -73,11 +74,11 @@ blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewMode
 
     basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
 
-    (req: ReqBody<BlogViewModel>, res: Response<BlogViewModel>)  => {
+    async (req: ReqBody<BlogViewModel>, res: Response<BlogViewModel>)  => {
 
-    let {id, name, description, websiteUrl} = req.body
+    let {id, name, description, websiteUrl, createdAt, isMembership} = req.body
 
-    let newBlog = blogsRepository.createBlog( id, name, description, websiteUrl)
+    let newBlog = await blogsRepository.createBlog( id, name, description, websiteUrl, createdAt, isMembership)
     res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
 })
 
@@ -86,9 +87,9 @@ blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewMode
 
   basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
 
-  ( req: ReqParamsAndBody<GetById, BlogInputModel>, res: Response<BlogViewModel>)  => {
+  async ( req: ReqParamsAndBody<GetById, BlogInputModel>, res: Response<BlogViewModel>)  => {
 
-  let isUpdate = blogsRepository.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
+  let isUpdate = await blogsRepository.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
   
   if(isUpdate){
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
@@ -104,6 +105,6 @@ blogsRouter.get('/', ( req: ReqParams<BlogViewModel>, res: Response<BlogViewMode
 
   basicAuth, 
 
-  (req: Request, res: Response) => {
-  res.send(HTTP_STATUSES.NO_CONTENT_204)
+  async (req: Request, res: Response) => {
+    await res.send(HTTP_STATUSES.NO_CONTENT_204)
 })

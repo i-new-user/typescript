@@ -32,15 +32,15 @@ let blogIdValid = body('blogId').isString()
 
 
 
-postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
+postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
 
-    let posts = postsRepository.findPosts()
+    let posts = await postsRepository.findPosts()
     res.send(posts)
 })
 
-.get('/:id', (req: ReqParams<GetById>, res: Response<PostViewModel>) => {
+.get('/:id', async (req: ReqParams<GetById>, res: Response<PostViewModel>) => {
 
-    let post = postsRepository.findPostById(req.params.id)
+    let post = await postsRepository.findPostById(req.params.id)
    
 
     if(post){
@@ -53,9 +53,9 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
 .delete('/:id',
     basicAuth, 
     
-    (req: ReqParams<GetById>, res: Response)  => {
+    async (req: ReqParams<GetById>, res: Response)  => {
 
-    let isDeleted = postsRepository.deletePost(req.params.id)
+    let isDeleted = await postsRepository.deletePost(req.params.id)
 
     if(isDeleted){
       res.send(HTTP_STATUSES.NO_CONTENT_204)
@@ -69,11 +69,11 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
 
   basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, isBlogCustomValid, inputValidation,
   
-  (req: ReqBody<PostViewModel>, res: Response<PostViewModel>)  => {
+  async (req: ReqBody<PostViewModel>, res: Response<PostViewModel>)  => {
   
   const { title, shortDescription, content, blogId} = req.body
       
-  let newPosts = postsRepository.createPost(title, shortDescription, content, blogId)
+  let newPosts = await postsRepository.createPost(title, shortDescription, content, blogId)
       res.status(HTTP_STATUSES.CREATED_201).send(newPosts)
 })
   
@@ -82,9 +82,9 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
 
   basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, isBlogCustomValid, inputValidation,
   
-  ( req: ReqParamsAndBodyPost<GetById, PostInputModel>, res: Response<PostViewModel>)  => {
+  async ( req: ReqParamsAndBodyPost<GetById, PostInputModel>, res: Response<PostViewModel>)  => {
   
-  let isUpdate = postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+  let isUpdate = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
   
   if(isUpdate){
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
@@ -100,6 +100,6 @@ postsRouter.get('/', (req: Request, res: Response<PostViewModel[]>) => {
 
   basicAuth, 
   
-  (req: Request, res: Response) => {
-    res.send(HTTP_STATUSES.NO_CONTENT_204)
+  async (req: Request, res: Response) => {
+    await res.send(HTTP_STATUSES.NO_CONTENT_204)
 })

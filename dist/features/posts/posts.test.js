@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = require("../../app");
 const statuses_1 = require("../../http/statuses");
+const post_test_manager_1 = require("./post_test_manager");
 //создает блок который группирует несколько связанных тестов
 describe('test for /posts', () => {
     //запускает функцию перед каждым тестом в этом файле
@@ -31,74 +32,46 @@ describe('test for /posts', () => {
             .get(`${app_1.ROUTER_PATH.posts}/1`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
-    // it('should not create entity with incorrect input data', async () => {
-    //     await request(app)
-    //         .post(ROUTER_PATH.posts)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: '',
-    //               description: 'description',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.BAD_REQUEST_400)
-    //     await request(app)
-    //         .get(ROUTER_PATH.posts)
-    //         .expect(HTTP_STATUSES.OK_200, [])    
-    // })
-    // let newEntity1: any = null
-    // let newEntity2: any = null
-    // it('should create entity1 with correct input data', async () => {
-    //     const respons = await request(app)
-    //         .post(ROUTER_PATH.blogs)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: 'name',
-    //               description: 'description',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.CREATED_201)
-    //     newEntity1 = respons.body 
-    //     expect(newEntity1).toEqual(
-    //         {
-    //             id: expect.any(String),
-    //             name: 'name',
-    //             description: 'description',
-    //             websiteUrl: 'https://samurai.it-incubator.io/' 
-    //         }
-    //     )
-    //     await request(app)
-    //         .get(ROUTER_PATH.blogs)
-    //         .expect(HTTP_STATUSES.OK_200, [newEntity1])
-    // })
-    // it('should create entity2 with correct input data', async () => {
-    //     const respons = await request(app)
-    //         .post(ROUTER_PATH.blogs)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: 'name 22222',
-    //               description: 'description 22222',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.CREATED_201)
-    //     newEntity2 = respons.body 
-    //     expect(newEntity2).toEqual(
-    //             {
-    //                 id: expect.any(String),
-    //                 name: 'name 22222',
-    //                 description: 'description 22222',
-    //                 websiteUrl: 'https://samurai.it-incubator.io/' 
-    //             }
-    //         )
-    //     await request(app)
-    //         .get(ROUTER_PATH.blogs)
-    //         .expect(HTTP_STATUSES.OK_200, [newEntity1, newEntity2])   
-    // })
+    it('should not create entity with incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            title: '',
+            shortDescription: 'create shortDescription',
+            content: 'create content',
+            blogId: ''
+        };
+        yield post_test_manager_1.postTestManager.createPost(data, statuses_1.HTTP_STATUSES.BAD_REQUEST_400);
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.posts)
+            .expect(statuses_1.HTTP_STATUSES.OK_200, []);
+    }));
+    let createPost1 = null;
+    let createPost2 = null;
+    it('should create entity1 with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            title: 'create title 1111',
+            shortDescription: 'create shortDescription 1111',
+            content: 'create content 1111',
+            blogId: ''
+        };
+        const result = yield post_test_manager_1.postTestManager.createPost(data, statuses_1.HTTP_STATUSES.CREATED_201);
+        createPost1 = result.createEntity;
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.posts)
+            .expect(statuses_1.HTTP_STATUSES.OK_200, [createPost1]);
+    }));
+    it('should create entity2 with correct input data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            title: 'create title 2222',
+            shortDescription: 'create shortDescription 2222',
+            content: 'create content 2222',
+            blogId: ''
+        };
+        const result = yield post_test_manager_1.postTestManager.createPost(data, statuses_1.HTTP_STATUSES.CREATED_201);
+        createPost2 = result.createEntity;
+        yield (0, supertest_1.default)(app_1.app)
+            .get(app_1.ROUTER_PATH.posts)
+            .expect(statuses_1.HTTP_STATUSES.OK_200, [createPost1, createPost2]);
+    }));
     // it('should not update entity with incorrect input data', async () => {
     //     await request(app)
     //         .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)

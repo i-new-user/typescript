@@ -1,9 +1,14 @@
 import { blogsRepository } from './blogs_repositoriy';
+import { postsCollection } from '../db';
+
 import { PostViewModel } from "../features/posts/models/view_model";
 import { PostInputModel } from "../features/posts/models/input_model";
+import { PostModel } from '../features/posts/models/post_model';
+import { PostMongoDBModel } from '../features/posts/models/post_mongoDb_model';
+import { ObjectId } from 'mongodb';
 
 
-let posts: PostViewModel[] = [
+let posts: PostModel[] = [
     { 
         id: '1', title:	'Французские галеты с абрикосами', 
         shortDescription:	'По-настоящему летний рецепт! Сочетание хрустящего теста и сочных кисло-сладких абрикосов никого не оставит равнодушным - особенно если подать этот пирог с пломбиром и кофе...', 
@@ -12,7 +17,8 @@ let posts: PostViewModel[] = [
                        Тесто собираем в комок, не вымешиваем. Тесто получится неоднородное и мягкое, к рукам липнуть не должно. Делим его на 2 равные части. 
                        Заматываем комочки теста в плёнку и убираем в холодильник минимум на 1 час. Также можно оставить на ночь.`,
         blogId:	'1',
-        blogName:'Тома'
+        blogName:'Тома',
+        createdAt: String(new Date())
     },
 
     { 
@@ -29,7 +35,8 @@ let posts: PostViewModel[] = [
                        Готовые печенья вынуть из духовки, оставить на протвине на 5 минут, затем переложить на решетку и дать полностью остыть.
                        Приятного чаепития. `,
         blogId:	'2',
-        blogName:'Клава'
+        blogName:'Клава',
+        createdAt: String(new Date())
     },
 
     { 
@@ -53,60 +60,81 @@ let posts: PostViewModel[] = [
         Сверху посыпать базиликом и тертым сыром.
         Готово`,
         blogId:	'3',
-        blogName:'Тося'
+        blogName:'Тося',
+        createdAt: String(new Date())
     },
 ]
 
 export const postsRepository = {
 
-    findPosts(){
-        return posts
+    async findPosts(): Promise<PostViewModel[]>{
+        const posts: PostMongoDBModel[] = await postsCollection.find({}).toArray()
+        return posts.map( post => (
+            {
+                id: String(+ (new Date()) ),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: String(new Date())
+            }
+        ))
     },
 
-    findPostById(id: string){
-        return posts.find(post => id === post.id)
-    },
-
-    createPost(title: string, shortDescription: string, content: string, blogId: string){
-        const blog = blogsRepository.findBlogById(blogId)
-        const newPost: PostViewModel = {
+    async findPostById(id: string): Promise<PostViewModel | undefined | null>{
+       const post: PostMongoDBModel | null = await postsCollection.findOne({id: id})
+       if(post){
+        return {
             id: String(+ (new Date()) ),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: post.blogId,
+            blogName: post.blogName,
+            createdAt: String(new Date())
+        }
+       } else {
+        return null
+       }
+    },
+
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewModel>{
+        const blog = await blogsRepository.findBlogById(blogId)
+        const newPost: PostMongoDBModel = {
+            _id: new ObjectId(),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blog!.name
+            blogName: blog!.name,
+            createdAt: String(new Date())
           }
-          posts.push(newPost)
-          return newPost
+        const result = await postsCollection.insertOne(newPost)
+
+        return   {
+            id: String(result.insertedId),
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId,
+            blogName: blog!.name,
+            createdAt: String(new Date())
+          }
     },
 
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string){
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean>{
 
-        let post = posts.find(post => post.id === id)
-    
-        if(post){
-            post.title = title,
-            post.shortDescription = shortDescription,
-            post.content = content,
-            post.blogId = blogId
-            return true;
-        } else {
-            return false;
-        }
+        const result = await postsCollection.updateOne({id: id}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
+        return result.matchedCount === 1
     },
 
-    deletePost(id: string){
-        for(let i = 0; i < posts.length; i++){
-            if(posts[i].id === id){
-                posts.splice(i, 1)
-                return true;
-            }
-        }
-        return false
+    async deletePost(id: string): Promise<boolean>{
+       const result = await postsCollection.deleteOne({id: id})
+       return result.deletedCount === 1
     },
 
-    deleteAllPost(){
-        return posts.splice(0, posts.length)
+    async deleteAllPost(){
+        return await postsCollection.deleteMany({})
     }
 }

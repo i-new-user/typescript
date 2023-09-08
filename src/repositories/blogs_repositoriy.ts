@@ -1,61 +1,92 @@
-import { BlogViewModel } from '../features/blogs/models/view_model';
+import { blogsCollection } from './../db';
+import { BlogViewModel } from './../features/blogs/models/view_model';
 import { BlogInputModel } from '../features/blogs/models/input_model';
+import { BlogModel } from '../features/blogs/models/blog_model';
+import { BlogMongoDBModel } from '../features/blogs/models/blog_mongoDB_model';
+import { ObjectId } from 'mongodb';
 
 
-let blogs: BlogViewModel[] = [
-    {id: '1', name: 'Тома', description: 'Интересные рецепты, тонкости приготовления разнообразных блюд и самые неожиданные кулинарные решения! Читайте наш блог.', websiteUrl: 'https://cookhouse.ru/blog/'},
-    {id: '2', name: 'Клава', description: 'Простые и вкусные рецепты, авторские рецепты с фото, а также лучшие проверенные рецепты.', websiteUrl: 'https://kulinarniiblog.com/'},
-    {id: '3', name: 'Тося', description: 'Кулинарный блог онлайн-школы ЩиБорщи ', websiteUrl: 'https://www.schiborschi.online/blog/'},
+
+let __blogs: BlogModel[] = [
+    {id: '1', name: 'Тома', description: 'Интересные рецепты, тонкости приготовления разнообразных блюд и самые неожиданные кулинарные решения! Читайте наш блог.', websiteUrl: 'https://cookhouse.ru/blog/', createdAt: String(new Date()), isMembership: false},
+    {id: '2', name: 'Клава', description: 'Простые и вкусные рецепты, авторские рецепты с фото, а также лучшие проверенные рецепты.', websiteUrl: 'https://kulinarniiblog.com/', createdAt: String(new Date()), isMembership: false},
+    {id: '3', name: 'Тося', description: 'Кулинарный блог онлайн-школы ЩиБорщи ', websiteUrl: 'https://www.schiborschi.online/blog/', createdAt: String(new Date()), isMembership: false},
 ]
+
+
 
 export const blogsRepository = {
 
-    findBlogs(){
-        return blogs
+    async findBlogs(): Promise<BlogViewModel[]>{
+        const blogs: BlogMongoDBModel[] = await blogsCollection.find({}).toArray()
+        return blogs.map( blog => (
+            {
+                id: blog._id.toString(),
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: blog.createdAt,
+                isMembership: blog.isMembership
+            }
+        ))
     },
 
-    findBlogById(id: string){
-        let blog = blogs.find(blog => id === blog.id)
-        return blog
+    async findBlogById(id: string): Promise<BlogViewModel | undefined | null>{
+        const blog = await blogsCollection.findOne({id: id})
+        if(blog){
+            return {
+                id: String(blog._id),
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: String(new Date()),
+                isMembership: false
+            }
+        } else {
+            return null
+        }
     },
 
-    createBlog(id: string, name: string, description: string, websiteUrl: string){
-        const newBlog: BlogViewModel = {
-            id: String(+ (new Date())),
+    async createBlog(id: string, name: string, description: string, websiteUrl: string, createdAt: string, isMembership: boolean): Promise<BlogViewModel>{
+
+        
+        const newBlog: BlogMongoDBModel = {
+            _id: new ObjectId(),
             name: name,
             description: description,
-            websiteUrl: websiteUrl
+            websiteUrl: websiteUrl,
+            createdAt: String(new Date()),
+            isMembership: false
           }
-          blogs.push(newBlog)
-          return newBlog
+
+          const result = await blogsCollection.insertOne(newBlog)
+
+          
+          return   {
+            id: String(result.insertedId),
+            name: name,
+            description: description,
+            websiteUrl: websiteUrl,
+            createdAt: String( new Date() ),
+            isMembership: true
+          }
     },
 
-    updateBlog(id: string, name: string, description: string, websiteUrl: string){
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean>{
 
-        let blog = blogs.find(p => p.id === id)
-    
-        if(blog){
-            blog.name = name,
-            blog.description = description,
-            blog.websiteUrl = websiteUrl
-            return true;
-        } else {
-            return false;
-        }
+        const result = await blogsCollection.updateOne({id: id}, {$set: {name: name, description: description, websiteUrl: websiteUrl }})
+        return result.matchedCount === 1
+
     },
 
-    deleteBlog(id: string){
-        for(let i = 0; i < blogs.length; i++){
-            if(blogs[i].id === id){
-              blogs.splice(i, 1)
-              return true;
-            }
-        }
-        return false
+    async deleteBlog(id: string): Promise<boolean>{
+        
+        const result = await blogsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     },
 
-    deleteAllBlogs(){
-        return blogs.splice(0, blogs.length)
+    async deleteAllBlogs(){
+        return await blogsCollection.deleteMany({})
     }
 
 }

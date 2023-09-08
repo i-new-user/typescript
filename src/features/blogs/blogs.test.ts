@@ -4,6 +4,8 @@ import { HTTP_STATUSES } from '../../http/statuses'
 
 import { BlogInputModel } from './models/input_model'
 
+import { blogTestManager } from './blog_test_manager'
+
 
 
 //создает блок который группирует несколько связанных тестов
@@ -31,19 +33,14 @@ describe('test for /blogs', () => {
 
 
     it('should not create entity with incorrect input data', async () => {
-        await request(app)
-            .post(ROUTER_PATH.blogs)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: '',
-                  description: 'description',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
-         
-        
+
+        const data: BlogInputModel = { 
+            name: '',
+            description: 'description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }
+
+        await blogTestManager.createBlog(data, HTTP_STATUSES.BAD_REQUEST_400)
             
         await request(app)
             .get(ROUTER_PATH.blogs)
@@ -52,8 +49,8 @@ describe('test for /blogs', () => {
 
 
     
-    let newEntity1: any = null
-    let newEntity2: any = null
+    let createBlog1: any = null
+    let createBlog2: any = null
 
     it('should create entity1 with correct input data', async () => {
 
@@ -63,30 +60,14 @@ describe('test for /blogs', () => {
             websiteUrl: 'https://samurai.it-incubator.io/'
         }
 
-        const respons = await request(app)
-            .post(ROUTER_PATH.blogs)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send( data )
-            .expect(HTTP_STATUSES.CREATED_201)
-         
+        const { createEntity } = await blogTestManager.createBlog(data)
+
+        createBlog1 = createEntity
         
-            
-        newEntity1 = respons.body 
-
-
-        expect(newEntity1).toEqual(
-            {
-                id: expect.any(String),
-                name: newEntity1.name,
-                description: newEntity1.description,
-                websiteUrl: newEntity1.websiteUrl
-            }
-        )
-
 
         await request(app)
             .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [newEntity1])
+            .expect(HTTP_STATUSES.OK_200, [createBlog1])
 
     })
 
@@ -101,28 +82,14 @@ describe('test for /blogs', () => {
         }
 
 
-        const respons = await request(app)
-            .post(ROUTER_PATH.blogs)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send( data )
-            .expect(HTTP_STATUSES.CREATED_201)
+        const { createEntity } = await blogTestManager.createBlog(data)
 
-         
-        newEntity2 = respons.body 
+        createBlog2 = createEntity
 
-
-        expect(newEntity2).toEqual(
-                {
-                    id: expect.any(String),
-                    name: newEntity2.name,
-                    description: newEntity2.description,
-                    websiteUrl: newEntity2.websiteUrl 
-                }
-            )
             
         await request(app)
             .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [newEntity1, newEntity2])   
+            .expect(HTTP_STATUSES.OK_200, [createBlog1, createBlog2])   
             
     })
 
@@ -137,15 +104,15 @@ describe('test for /blogs', () => {
 
 
         await request(app)
-            .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .put(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send( data )
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
          
 
-            await request(app)
-                .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-                .expect(HTTP_STATUSES.OK_200, newEntity1)
+        await request(app)
+            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
+            .expect(HTTP_STATUSES.OK_200, createBlog1)
 
     })
 
@@ -177,7 +144,7 @@ describe('test for /blogs', () => {
 
 
         await request(app)
-            .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .put(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send( data )
             .expect(HTTP_STATUSES.NO_CONTENT_204)
@@ -185,9 +152,9 @@ describe('test for /blogs', () => {
 
 
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
             .expect(HTTP_STATUSES.OK_200,
-                                {   ...newEntity1,
+                                {   ...createBlog1,
                                     name: data.name,
                                     description: data.description,
                                     websiteUrl: data.websiteUrl
@@ -197,19 +164,19 @@ describe('test for /blogs', () => {
         await request(app)
             .get(ROUTER_PATH.blogs)
             .expect(HTTP_STATUSES.OK_200, [
-                {   ...newEntity1,
+                {   ...createBlog1,
                     name: data.name,
                     description: data.description,
                     websiteUrl: data.websiteUrl
                 }, 
-                newEntity2])
+                createBlog2])
 
       
         
         
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
-            .expect(HTTP_STATUSES.OK_200, newEntity2)
+            .get(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
+            .expect(HTTP_STATUSES.OK_200, createBlog2)
 
     })
     
@@ -217,24 +184,24 @@ describe('test for /blogs', () => {
     
     it('should delete both entityes', async () => {
         await request(app)
-            .delete(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .delete(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
+            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
             .expect(HTTP_STATUSES.NOT_FOUND_404)   
             
             
         await request(app)
-            .delete(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
+            .delete(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .expect(HTTP_STATUSES.NO_CONTENT_204)    
 
 
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
+            .get(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
             .expect(HTTP_STATUSES.NOT_FOUND_404) 
 
            

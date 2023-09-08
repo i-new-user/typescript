@@ -1,7 +1,18 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
 const blogs_repositoriy_1 = require("./blogs_repositoriy");
+const db_1 = require("../db");
+const mongodb_1 = require("mongodb");
 let posts = [
     {
         id: '1', title: 'Французские галеты с абрикосами',
@@ -11,7 +22,8 @@ let posts = [
                        Тесто собираем в комок, не вымешиваем. Тесто получится неоднородное и мягкое, к рукам липнуть не должно. Делим его на 2 равные части. 
                        Заматываем комочки теста в плёнку и убираем в холодильник минимум на 1 час. Также можно оставить на ночь.`,
         blogId: '1',
-        blogName: 'Тома'
+        blogName: 'Тома',
+        createdAt: String(new Date())
     },
     {
         id: '2', title: 'Печенье с арахисовым маслом',
@@ -27,7 +39,8 @@ let posts = [
                        Готовые печенья вынуть из духовки, оставить на протвине на 5 минут, затем переложить на решетку и дать полностью остыть.
                        Приятного чаепития. `,
         blogId: '2',
-        blogName: 'Клава'
+        blogName: 'Клава',
+        createdAt: String(new Date())
     },
     {
         id: '3', title: '5 рецептов летней пасты',
@@ -50,52 +63,83 @@ let posts = [
         Сверху посыпать базиликом и тертым сыром.
         Готово`,
         blogId: '3',
-        blogName: 'Тося'
+        blogName: 'Тося',
+        createdAt: String(new Date())
     },
 ];
 exports.postsRepository = {
     findPosts() {
-        return posts;
+        return __awaiter(this, void 0, void 0, function* () {
+            const posts = yield db_1.postsCollection.find({}).toArray();
+            return posts.map(post => ({
+                id: String(+(new Date())),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: String(new Date())
+            }));
+        });
     },
     findPostById(id) {
-        return posts.find(post => id === post.id);
+        return __awaiter(this, void 0, void 0, function* () {
+            const post = yield db_1.postsCollection.findOne({ id: id });
+            if (post) {
+                return {
+                    id: String(+(new Date())),
+                    title: post.title,
+                    shortDescription: post.shortDescription,
+                    content: post.content,
+                    blogId: post.blogId,
+                    blogName: post.blogName,
+                    createdAt: String(new Date())
+                };
+            }
+            else {
+                return null;
+            }
+        });
     },
     createPost(title, shortDescription, content, blogId) {
-        const blog = blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
-        const newPost = {
-            id: String(+(new Date())),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
-            blogName: blog.name
-        };
-        posts.push(newPost);
-        return newPost;
+        return __awaiter(this, void 0, void 0, function* () {
+            const blog = yield blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
+            const newPost = {
+                _id: new mongodb_1.ObjectId(),
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blogId,
+                blogName: blog.name,
+                createdAt: String(new Date())
+            };
+            const result = yield db_1.postsCollection.insertOne(newPost);
+            return {
+                id: String(result.insertedId),
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blogId,
+                blogName: blog.name,
+                createdAt: String(new Date())
+            };
+        });
     },
     updatePost(id, title, shortDescription, content, blogId) {
-        let post = posts.find(post => post.id === id);
-        if (post) {
-            post.title = title,
-                post.shortDescription = shortDescription,
-                post.content = content,
-                post.blogId = blogId;
-            return true;
-        }
-        else {
-            return false;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.postsCollection.updateOne({ id: id }, { $set: { title: title, shortDescription: shortDescription, content: content, blogId: blogId } });
+            return result.matchedCount === 1;
+        });
     },
     deletePost(id) {
-        for (let i = 0; i < posts.length; i++) {
-            if (posts[i].id === id) {
-                posts.splice(i, 1);
-                return true;
-            }
-        }
-        return false;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.postsCollection.deleteOne({ id: id });
+            return result.deletedCount === 1;
+        });
     },
     deleteAllPost() {
-        return posts.splice(0, posts.length);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.postsCollection.deleteMany({});
+        });
     }
 };

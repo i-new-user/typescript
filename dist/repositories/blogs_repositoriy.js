@@ -1,51 +1,90 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
-let blogs = [
-    { id: '1', name: 'Тома', description: 'Интересные рецепты, тонкости приготовления разнообразных блюд и самые неожиданные кулинарные решения! Читайте наш блог.', websiteUrl: 'https://cookhouse.ru/blog/' },
-    { id: '2', name: 'Клава', description: 'Простые и вкусные рецепты, авторские рецепты с фото, а также лучшие проверенные рецепты.', websiteUrl: 'https://kulinarniiblog.com/' },
-    { id: '3', name: 'Тося', description: 'Кулинарный блог онлайн-школы ЩиБорщи ', websiteUrl: 'https://www.schiborschi.online/blog/' },
+const db_1 = require("./../db");
+const mongodb_1 = require("mongodb");
+let __blogs = [
+    { id: '1', name: 'Тома', description: 'Интересные рецепты, тонкости приготовления разнообразных блюд и самые неожиданные кулинарные решения! Читайте наш блог.', websiteUrl: 'https://cookhouse.ru/blog/', createdAt: String(new Date()), isMembership: false },
+    { id: '2', name: 'Клава', description: 'Простые и вкусные рецепты, авторские рецепты с фото, а также лучшие проверенные рецепты.', websiteUrl: 'https://kulinarniiblog.com/', createdAt: String(new Date()), isMembership: false },
+    { id: '3', name: 'Тося', description: 'Кулинарный блог онлайн-школы ЩиБорщи ', websiteUrl: 'https://www.schiborschi.online/blog/', createdAt: String(new Date()), isMembership: false },
 ];
 exports.blogsRepository = {
     findBlogs() {
-        return blogs;
+        return __awaiter(this, void 0, void 0, function* () {
+            const blogs = yield db_1.blogsCollection.find({}).toArray();
+            return blogs.map(blog => ({
+                id: blog._id.toString(),
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: blog.createdAt,
+                isMembership: blog.isMembership
+            }));
+        });
     },
     findBlogById(id) {
-        let blog = blogs.find(blog => id === blog.id);
-        return blog;
+        return __awaiter(this, void 0, void 0, function* () {
+            const blog = yield db_1.blogsCollection.findOne({ id: id });
+            if (blog) {
+                return {
+                    id: String(blog._id),
+                    name: blog.name,
+                    description: blog.description,
+                    websiteUrl: blog.websiteUrl,
+                    createdAt: String(new Date()),
+                    isMembership: false
+                };
+            }
+            else {
+                return null;
+            }
+        });
     },
-    createBlog(id, name, description, websiteUrl) {
-        const newBlog = {
-            id: String(+(new Date())),
-            name: name,
-            description: description,
-            websiteUrl: websiteUrl
-        };
-        blogs.push(newBlog);
-        return newBlog;
+    createBlog(id, name, description, websiteUrl, createdAt, isMembership) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newBlog = {
+                _id: new mongodb_1.ObjectId(),
+                name: name,
+                description: description,
+                websiteUrl: websiteUrl,
+                createdAt: String(new Date()),
+                isMembership: false
+            };
+            const result = yield db_1.blogsCollection.insertOne(newBlog);
+            return {
+                id: String(result.insertedId),
+                name: name,
+                description: description,
+                websiteUrl: websiteUrl,
+                createdAt: String(new Date()),
+                isMembership: true
+            };
+        });
     },
     updateBlog(id, name, description, websiteUrl) {
-        let blog = blogs.find(p => p.id === id);
-        if (blog) {
-            blog.name = name,
-                blog.description = description,
-                blog.websiteUrl = websiteUrl;
-            return true;
-        }
-        else {
-            return false;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.updateOne({ id: id }, { $set: { name: name, description: description, websiteUrl: websiteUrl } });
+            return result.matchedCount === 1;
+        });
     },
     deleteBlog(id) {
-        for (let i = 0; i < blogs.length; i++) {
-            if (blogs[i].id === id) {
-                blogs.splice(i, 1);
-                return true;
-            }
-        }
-        return false;
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.deleteOne({ id: id });
+            return result.deletedCount === 1;
+        });
     },
     deleteAllBlogs() {
-        return blogs.splice(0, blogs.length);
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.blogsCollection.deleteMany({});
+        });
     }
 };
