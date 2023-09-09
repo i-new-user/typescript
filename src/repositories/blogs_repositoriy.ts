@@ -47,7 +47,7 @@ export const blogsRepository = {
         }
     },
 
-    async createBlog(id: string, name: string, description: string, websiteUrl: string, createdAt: string, isMembership: boolean): Promise<BlogViewModel>{
+    async createBlog( name: string, description: string, websiteUrl: string): Promise<BlogViewModel>{
 
         
         const newBlog: BlogMongoDBModel = {

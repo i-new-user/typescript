@@ -83,7 +83,7 @@ export const postsRepository = {
     },
 
     async findPostById(id: string): Promise<PostViewModel | undefined | null>{
-       const post: PostMongoDBModel | null = await postsCollection.findOne({id: id})
+       const post: PostMongoDBModel | null = await postsCollection.findOne({_id: new ObjectId(id)})
        if(post){
         return {
             id: String(+ (new Date()) ),

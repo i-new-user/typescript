@@ -84,7 +84,7 @@ exports.postsRepository = {
     },
     findPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield db_1.postsCollection.findOne({ id: id });
+            const post = yield db_1.postsCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (post) {
                 return {
                     id: String(+(new Date())),

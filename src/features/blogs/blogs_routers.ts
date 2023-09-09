@@ -74,11 +74,11 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
     basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
 
-    async (req: ReqBody<BlogViewModel>, res: Response<BlogViewModel>)  => {
+    async (req: ReqBody<BlogInputModel>, res: Response<BlogViewModel>)  => {
 
-    let {id, name, description, websiteUrl, createdAt, isMembership} = req.body
+    let {name, description, websiteUrl} = req.body
 
-    let newBlog = await blogsRepository.createBlog( id, name, description, websiteUrl, createdAt, isMembership)
+    let newBlog = await blogsRepository.createBlog( name, description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
 })
 

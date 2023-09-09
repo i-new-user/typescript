@@ -43,8 +43,8 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }))
     .post('/', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { id, name, description, websiteUrl, createdAt, isMembership } = req.body;
-    let newBlog = yield blogs_repositoriy_1.blogsRepository.createBlog(id, name, description, websiteUrl, createdAt, isMembership);
+    let { name, description, websiteUrl } = req.body;
+    let newBlog = yield blogs_repositoriy_1.blogsRepository.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newBlog);
 }))
     .put('/:id', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

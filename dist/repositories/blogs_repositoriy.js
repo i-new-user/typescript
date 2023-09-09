@@ -49,7 +49,7 @@ exports.blogsRepository = {
             }
         });
     },
-    createBlog(id, name, description, websiteUrl, createdAt, isMembership) {
+    createBlog(name, description, websiteUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             const newBlog = {
                 _id: new mongodb_1.ObjectId(),
