@@ -71,7 +71,7 @@ export const postsRepository = {
         const posts: PostMongoDBModel[] = await postsCollection.find({}).toArray()
         return posts.map( post => (
             {
-                id: String(+ (new Date()) ),
+                id: String(post._id),
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
@@ -86,7 +86,7 @@ export const postsRepository = {
        const post: PostMongoDBModel | null = await postsCollection.findOne({_id: new ObjectId(id)})
        if(post){
         return {
-            id: String(+ (new Date()) ),
+            id: String(post._id) ,
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
@@ -101,13 +101,6 @@ export const postsRepository = {
 
 
 
-
-    // createPost(title, shortDescription, content, blogId): Этот метод асинхронно создает новый пост в базе данных. 
-    // Он принимает параметры title (заголовок), shortDescription (краткое описание), content (содержание) и blogId (идентификатор блога). 
-    // Метод сначала ищет блог по заданному blogId, затем создает новый объект PostMongoDBModel с данными о посте. 
-    // Пост затем вставляется в базу данных методом insertOne. Затем метод возвращает созданный пост в виде объекта PostViewModel с обновленным идентификатором и текущим временем создания.
-
-
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewModel>{
         const blog = await blogsRepository.findBlogById(blogId)
       
@@ -120,6 +113,7 @@ export const postsRepository = {
             blogName: blog!.name,
             createdAt: String(new Date())
           }
+
         const result = await postsCollection.insertOne(newPost)
 
         return   {
@@ -135,12 +129,12 @@ export const postsRepository = {
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean>{
 
-        const result = await postsCollection.updateOne({id: id}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
+        const result = await postsCollection.updateOne({_id: new Object(id)}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
         return result.matchedCount === 1
     },
 
     async deletePost(id: string): Promise<boolean>{
-       const result = await postsCollection.deleteOne({id: id})
+       const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
        return result.deletedCount === 1
     },
 

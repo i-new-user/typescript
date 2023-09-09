@@ -21,7 +21,7 @@ export const blogsRepository = {
         const blogs: BlogMongoDBModel[] = await blogsCollection.find({}).toArray()
         return blogs.map( blog => (
             {
-                id: blog._id.toString(),
+                id:  String(blog._id),
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
@@ -74,14 +74,14 @@ export const blogsRepository = {
 
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean>{
 
-        const result = await blogsCollection.updateOne({id: id}, {$set: {name: name, description: description, websiteUrl: websiteUrl }})
+        const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, {$set: {name: name, description: description, websiteUrl: websiteUrl }})
         return result.matchedCount === 1
 
     },
 
     async deleteBlog(id: string): Promise<boolean>{
         
-        const result = await blogsCollection.deleteOne({id: id})
+        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
 

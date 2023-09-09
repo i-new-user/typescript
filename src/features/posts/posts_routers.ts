@@ -69,7 +69,7 @@ postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
 
   basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, isBlogCustomValid, inputValidation,
   
-  async (req: ReqBody<PostViewModel>, res: Response<PostViewModel>)  => {
+  async (req: ReqBody<PostInputModel>, res: Response<PostViewModel>)  => {
   
   const { title, shortDescription, content, blogId} = req.body
       

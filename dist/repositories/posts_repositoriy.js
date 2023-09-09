@@ -72,7 +72,7 @@ exports.postsRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             const posts = yield db_1.postsCollection.find({}).toArray();
             return posts.map(post => ({
-                id: String(+(new Date())),
+                id: String(post._id),
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
@@ -87,7 +87,7 @@ exports.postsRepository = {
             const post = yield db_1.postsCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (post) {
                 return {
-                    id: String(+(new Date())),
+                    id: String(post._id),
                     title: post.title,
                     shortDescription: post.shortDescription,
                     content: post.content,
@@ -101,10 +101,6 @@ exports.postsRepository = {
             }
         });
     },
-    // createPost(title, shortDescription, content, blogId): Этот метод асинхронно создает новый пост в базе данных. 
-    // Он принимает параметры title (заголовок), shortDescription (краткое описание), content (содержание) и blogId (идентификатор блога). 
-    // Метод сначала ищет блог по заданному blogId, затем создает новый объект PostMongoDBModel с данными о посте. 
-    // Пост затем вставляется в базу данных методом insertOne. Затем метод возвращает созданный пост в виде объекта PostViewModel с обновленным идентификатором и текущим временем создания.
     createPost(title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
             const blog = yield blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
@@ -131,13 +127,13 @@ exports.postsRepository = {
     },
     updatePost(id, title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.postsCollection.updateOne({ id: id }, { $set: { title: title, shortDescription: shortDescription, content: content, blogId: blogId } });
+            const result = yield db_1.postsCollection.updateOne({ _id: new Object(id) }, { $set: { title: title, shortDescription: shortDescription, content: content, blogId: blogId } });
             return result.matchedCount === 1;
         });
     },
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.postsCollection.deleteOne({ id: id });
+            const result = yield db_1.postsCollection.deleteOne({ _id: new mongodb_1.ObjectId(id) });
             return result.deletedCount === 1;
         });
     },
