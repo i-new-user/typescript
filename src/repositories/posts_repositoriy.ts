@@ -101,6 +101,7 @@ export const postsRepository = {
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewModel>{
         const blog = await blogsRepository.findBlogById(blogId)
+      
         const newPost: PostMongoDBModel = {
             _id: new ObjectId(),
             title: title,
