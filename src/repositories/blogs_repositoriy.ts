@@ -39,8 +39,8 @@ export const blogsRepository = {
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
-                createdAt: String(new Date()),
-                isMembership: false
+                createdAt: new Date().toISOString(),
+                isMembership: true
             }
         } else {
             return null
@@ -55,8 +55,8 @@ export const blogsRepository = {
             name: name,
             description: description,
             websiteUrl: websiteUrl,
-            createdAt: String(new Date()),
-            isMembership: false
+            createdAt:new Date().toISOString(),
+            isMembership: true
           }
 
           const result = await blogsCollection.insertOne(newBlog)
@@ -67,7 +67,7 @@ export const blogsRepository = {
             name: name,
             description: description,
             websiteUrl: websiteUrl,
-            createdAt: String( new Date() ),
+            createdAt: new Date().toISOString(),
             isMembership: true
           }
     },
