@@ -99,6 +99,15 @@ export const postsRepository = {
        }
     },
 
+
+
+
+    // createPost(title, shortDescription, content, blogId): Этот метод асинхронно создает новый пост в базе данных. 
+    // Он принимает параметры title (заголовок), shortDescription (краткое описание), content (содержание) и blogId (идентификатор блога). 
+    // Метод сначала ищет блог по заданному blogId, затем создает новый объект PostMongoDBModel с данными о посте. 
+    // Пост затем вставляется в базу данных методом insertOne. Затем метод возвращает созданный пост в виде объекта PostViewModel с обновленным идентификатором и текущим временем создания.
+
+
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewModel>{
         const blog = await blogsRepository.findBlogById(blogId)
       

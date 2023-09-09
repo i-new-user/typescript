@@ -101,6 +101,10 @@ exports.postsRepository = {
             }
         });
     },
+    // createPost(title, shortDescription, content, blogId): Этот метод асинхронно создает новый пост в базе данных. 
+    // Он принимает параметры title (заголовок), shortDescription (краткое описание), content (содержание) и blogId (идентификатор блога). 
+    // Метод сначала ищет блог по заданному blogId, затем создает новый объект PostMongoDBModel с данными о посте. 
+    // Пост затем вставляется в базу данных методом insertOne. Затем метод возвращает созданный пост в виде объекта PostViewModel с обновленным идентификатором и текущим временем создания.
     createPost(title, shortDescription, content, blogId) {
         return __awaiter(this, void 0, void 0, function* () {
             const blog = yield blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
