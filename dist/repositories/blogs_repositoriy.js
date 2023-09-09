@@ -33,7 +33,7 @@ exports.blogsRepository = {
     },
     findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const blog = yield db_1.blogsCollection.findOne({ id: id });
+            const blog = yield db_1.blogsCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (blog) {
                 return {
                     id: String(blog._id),

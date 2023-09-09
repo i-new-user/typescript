@@ -32,7 +32,7 @@ export const blogsRepository = {
     },
 
     async findBlogById(id: string): Promise<BlogViewModel | undefined | null>{
-        const blog = await blogsCollection.findOne({id: id})
+        const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
         if(blog){
             return {
                 id: String(blog._id),
