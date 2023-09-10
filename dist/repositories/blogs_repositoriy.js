@@ -41,7 +41,7 @@ exports.blogsRepository = {
                     description: blog.description,
                     websiteUrl: blog.websiteUrl,
                     createdAt: new Date().toISOString(),
-                    isMembership: true
+                    isMembership: blog.isMembership
                 };
             }
             else {
@@ -57,7 +57,7 @@ exports.blogsRepository = {
                 description: description,
                 websiteUrl: websiteUrl,
                 createdAt: new Date().toISOString(),
-                isMembership: true
+                isMembership: false
             };
             const result = yield db_1.blogsCollection.insertOne(newBlog);
             return {
@@ -66,7 +66,7 @@ exports.blogsRepository = {
                 description: description,
                 websiteUrl: websiteUrl,
                 createdAt: new Date().toISOString(),
-                isMembership: true
+                isMembership: false
             };
         });
     },

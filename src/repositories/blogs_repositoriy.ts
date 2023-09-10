@@ -40,7 +40,7 @@ export const blogsRepository = {
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 createdAt: new Date().toISOString(),
-                isMembership: true
+                isMembership: blog.isMembership
             }
         } else {
             return null
@@ -56,7 +56,7 @@ export const blogsRepository = {
             description: description,
             websiteUrl: websiteUrl,
             createdAt:new Date().toISOString(),
-            isMembership: true
+            isMembership: false
           }
 
           const result = await blogsCollection.insertOne(newBlog)
@@ -68,7 +68,7 @@ export const blogsRepository = {
             description: description,
             websiteUrl: websiteUrl,
             createdAt: new Date().toISOString(),
-            isMembership: true
+            isMembership: false
           }
     },
 
