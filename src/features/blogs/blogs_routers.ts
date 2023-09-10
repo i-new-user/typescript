@@ -20,7 +20,7 @@ import { blogsRepository } from "../../repositories/blogs_repositoriy";
 
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
-
+import { isBlogCustomValid } from '../../middleware/blog_custom_validator';
 
 
 
@@ -85,7 +85,7 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
 .put('/:id',
 
-  basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
+  basicAuth, nameValid, descriptionValid, websiteUrlValid, isBlogCustomValid, inputValidation,
 
   async ( req: ReqParamsAndBody<GetById, BlogInputModel>, res: Response<BlogViewModel>)  => {
 

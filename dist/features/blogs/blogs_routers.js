@@ -16,6 +16,7 @@ const statuses_1 = require("../../http/statuses");
 const blogs_repositoriy_1 = require("../../repositories/blogs_repositoriy");
 const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
+const blog_custom_validator_1 = require("../../middleware/blog_custom_validator");
 exports.blogsRouter = (0, express_1.Router)({});
 let nameValid = (0, express_validator_1.body)('name').isString().trim().isLength({ min: 1, max: 15 });
 let descriptionValid = (0, express_validator_1.body)('description').trim().isString().isLength({ min: 1, max: 500 });
@@ -47,7 +48,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     let newBlog = yield blogs_repositoriy_1.blogsRepository.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newBlog);
 }))
-    .put('/:id', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .put('/:id', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, blog_custom_validator_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let isUpdate = yield blogs_repositoriy_1.blogsRepository.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
     if (isUpdate) {
         res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
