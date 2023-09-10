@@ -116,12 +116,12 @@ exports.postsRepository = {
             const result = yield db_1.postsCollection.insertOne(newPost);
             return {
                 id: String(result.insertedId),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blogId,
+                title: newPost.title,
+                shortDescription: newPost.shortDescription,
+                content: newPost.content,
+                blogId: newPost.blogId,
                 blogName: blog.name,
-                createdAt: new Date().toISOString()
+                createdAt: newPost.createdAt
             };
         });
     },

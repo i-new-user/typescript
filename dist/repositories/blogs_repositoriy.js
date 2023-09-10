@@ -62,11 +62,11 @@ exports.blogsRepository = {
             const result = yield db_1.blogsCollection.insertOne(newBlog);
             return {
                 id: String(result.insertedId),
-                name: name,
-                description: description,
-                websiteUrl: websiteUrl,
-                createdAt: new Date().toISOString(),
-                isMembership: false
+                name: newBlog.name,
+                description: newBlog.description,
+                websiteUrl: newBlog.websiteUrl,
+                createdAt: newBlog.createdAt,
+                isMembership: newBlog.isMembership
             };
         });
     },
