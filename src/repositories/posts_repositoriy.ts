@@ -77,7 +77,7 @@ export const postsRepository = {
                 content: post.content,
                 blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: new Date().toUTCString()
+                createdAt: post.createdAt
             }
         ))
     },
@@ -92,7 +92,7 @@ export const postsRepository = {
             content: post.content,
             blogId: post.blogId,
             blogName: post.blogName,
-            createdAt: new Date().toUTCString()
+            createdAt: post.createdAt
         }
        } else {
         return null
@@ -111,7 +111,7 @@ export const postsRepository = {
             content: content,
             blogId: blogId,
             blogName: blog!.name,
-            createdAt:  new Date().toUTCString(),
+            createdAt:  new Date().toISOString(),
           }
 
         const result = await postsCollection.insertOne(newPost)
@@ -123,7 +123,7 @@ export const postsRepository = {
             content: content,
             blogId: blogId,
             blogName: blog!.name,
-            createdAt: new Date().toUTCString()
+            createdAt:  new Date().toISOString()
           }
     },
 

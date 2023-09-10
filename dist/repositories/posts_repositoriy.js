@@ -78,7 +78,7 @@ exports.postsRepository = {
                 content: post.content,
                 blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: new Date().toUTCString()
+                createdAt: post.createdAt
             }));
         });
     },
@@ -93,7 +93,7 @@ exports.postsRepository = {
                     content: post.content,
                     blogId: post.blogId,
                     blogName: post.blogName,
-                    createdAt: new Date().toUTCString()
+                    createdAt: post.createdAt
                 };
             }
             else {
@@ -111,7 +111,7 @@ exports.postsRepository = {
                 content: content,
                 blogId: blogId,
                 blogName: blog.name,
-                createdAt: new Date().toUTCString(),
+                createdAt: new Date().toISOString(),
             };
             const result = yield db_1.postsCollection.insertOne(newPost);
             return {
@@ -121,7 +121,7 @@ exports.postsRepository = {
                 content: content,
                 blogId: blogId,
                 blogName: blog.name,
-                createdAt: new Date().toUTCString()
+                createdAt: new Date().toISOString()
             };
         });
     },

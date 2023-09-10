@@ -26,7 +26,7 @@ export const blogsRepository = {
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 createdAt: blog.createdAt,
-                isMembership: false
+                isMembership: blog.isMembership
             }
         ))
     },
