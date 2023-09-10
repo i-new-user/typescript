@@ -40,7 +40,7 @@ exports.blogsRepository = {
                     name: blog.name,
                     description: blog.description,
                     websiteUrl: blog.websiteUrl,
-                    createdAt: new Date().toISOString(),
+                    createdAt: blog.createdAt,
                     isMembership: false
                 };
             }

@@ -39,7 +39,7 @@ export const blogsRepository = {
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
-                createdAt: new Date().toISOString(),
+                createdAt: blog.createdAt,
                 isMembership: false
             }
         } else {
@@ -55,7 +55,7 @@ export const blogsRepository = {
             name: name,
             description: description,
             websiteUrl: websiteUrl,
-            createdAt:new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             isMembership: false
           }
 
