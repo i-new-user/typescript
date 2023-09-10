@@ -27,7 +27,7 @@ exports.blogsRepository = {
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 createdAt: blog.createdAt,
-                isMembership: blog.isMembership
+                isMembership: false
             }));
         });
     },
@@ -41,7 +41,7 @@ exports.blogsRepository = {
                     description: blog.description,
                     websiteUrl: blog.websiteUrl,
                     createdAt: new Date().toISOString(),
-                    isMembership: blog.isMembership
+                    isMembership: false
                 };
             }
             else {
