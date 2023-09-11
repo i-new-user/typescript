@@ -87,9 +87,9 @@ postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
   let isUpdate = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
   
   if(isUpdate){
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
   } else {
-    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
   
 })  

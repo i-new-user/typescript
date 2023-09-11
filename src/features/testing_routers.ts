@@ -6,8 +6,8 @@ import { HTTP_STATUSES } from "../http/statuses";
 
 export const testingRouter = Router({})
 
-testingRouter.delete('/', (req: Request, res: Response) => {
-    blogsRepository.deleteAllBlogs()
-    postsRepository.deleteAllPost()
+testingRouter.delete('/', async (req: Request, res: Response) => {
+    await blogsRepository.deleteAllBlogs()
+    await postsRepository.deleteAllPost()
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

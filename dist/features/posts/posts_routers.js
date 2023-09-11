@@ -52,10 +52,10 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     .put('/:id', basic_auth_1.basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, blog_custom_validator_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let isUpdate = yield posts_repositoriy_1.postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (isUpdate) {
-        res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+        return res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
     else {
-        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
     .delete('/testing/all-date', basic_auth_1.basicAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
