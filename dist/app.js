@@ -21,7 +21,21 @@ exports.ROUTER_PATH = {
 exports.app.use(exports.ROUTER_PATH.blogs, blogs_routers_1.blogsRouter);
 exports.app.use(exports.ROUTER_PATH.posts, posts_routers_1.postsRouter);
 exports.app.use(exports.ROUTER_PATH.test, testing_routers_1.testingRouter);
+// type objType = {
+//   [key: string]: {id: number, name: string}
+// }
+// let obj: objType = {
+//   '1': {id: 1, name: 'Tom'}, 
+//   '100':  {id: 2, name: 'Ket'}, 
+//   '1000':  {id: 3, name: 'Kruz'},
+//   '5000':  {id: 4, name: 'Sem'}
+// }
+// let arr = [
+//   {id: 1, name: 'Tom'}, 
+//   {id: 2, name: 'Ket'}, 
+//   {id: 3, name: 'Kruz'},
+//   {id: 4, name: 'Sem'}
+// ]
 exports.app.get('/', (req, res) => {
-    console.log(exports.ROUTER_PATH.test);
     res.send('Hello World!');
 });

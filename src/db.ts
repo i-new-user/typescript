@@ -20,14 +20,13 @@ export const postsCollection = db.collection<PostMongoDBModel>('posts')
 
 export const runDb = async () => {
     try{
-        console.log(process.env.MONGO_URL)
+        // console.log(process.env.MONGO_URL)
         await client.connect()
         console.log('Connected successfully to server')
 
     } catch(e) {
 
         console.log('Dont connected successfully to server')
-
         await client.close()
 
     }

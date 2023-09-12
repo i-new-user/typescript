@@ -27,7 +27,7 @@ describe('test for /blogs', () => {
 
     it('should return 404 for not existing entity', async () => {
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/1`)
+            .get(`${ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
@@ -57,7 +57,7 @@ describe('test for /blogs', () => {
         const data: BlogInputModel = { 
             name: 'name',
             description: 'description',
-            websiteUrl: 'https://samurai.it-incubator.io/'
+            websiteUrl: 'https://samurai.it-incubator.io/',
         }
 
         const { createEntity } = await blogTestManager.createBlog(data)
@@ -120,7 +120,7 @@ describe('test for /blogs', () => {
     it('should not update entity that not exist', async () => {
 
         await request(app)
-            .put(`${ROUTER_PATH.blogs}/17`)
+            .put(`${ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send(
                 { 

@@ -1,8 +1,12 @@
 import request from 'supertest'
 import { app, ROUTER_PATH } from '../../app'
+
 import { HTTP_STATUSES } from '../../http/statuses'
+
 import { PostInputModel } from './models/input_model'
 import { postTestManager } from './post_test_manager'
+
+import { blogsRepository } from '../../repositories/blogs_repositoriy'
 
 
 
@@ -27,7 +31,7 @@ describe('test for /posts', () => {
 
     it('should return 404 for not existing entity', async () => {
         await request(app)
-            .get(`${ROUTER_PATH.posts}/1`)
+            .get(`${ROUTER_PATH.posts}/650050e9e9e9659e4c3057cd`)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
@@ -55,13 +59,20 @@ describe('test for /posts', () => {
     let createPost1: any = null
     let createPost2: any = null
 
+    
+    let blog1: any = null
+    let blog2: any = null
+
     it('should create entity1 with correct input data', async () => {
+
+        blog1 = await blogsRepository.createBlog('create name 1111111', 'create description 111111', 'create websiteUrl 111111')
+
 
         const data: PostInputModel = { 
             title: 'create title 1111',
             shortDescription: 'create shortDescription 1111',
             content: 'create content 1111',
-            blogId: ''
+            blogId: blog1.id
         }
 
         const result = await postTestManager.createPost(data, HTTP_STATUSES.CREATED_201)
@@ -78,11 +89,14 @@ describe('test for /posts', () => {
 
     it('should create entity2 with correct input data', async () => {
 
+        blog2 = await blogsRepository.createBlog('create name 2222', 'create description 222222', 'create websiteUrl 22222')
+
+        
         const data: PostInputModel = { 
             title: 'create title 2222',
             shortDescription: 'create shortDescription 2222',
             content: 'create content 2222',
-            blogId: ''
+            blogId: blog2.id
         }
 
         const result = await postTestManager.createPost(data, HTTP_STATUSES.CREATED_201)
@@ -97,116 +111,123 @@ describe('test for /posts', () => {
     })
 
   
-    // it('should not update entity with incorrect input data', async () => {
-    //     await request(app)
-    //         .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: 'name',
-    //               description: '',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.BAD_REQUEST_400)
+    it('should not update entity with incorrect input data', async () => {
+        await request(app)
+            .put(`${ROUTER_PATH.posts}/${createPost1.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send(
+                { 
+                    title: '',
+                    shortDescription: 'update shortDescription 1',
+                    content: 'update content 1',
+                    blogId: blog1.id
+                }
+            )
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
          
 
-    //         await request(app)
-    //             .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //             .expect(HTTP_STATUSES.OK_200, newEntity1)
+            await request(app)
+                .get(`${ROUTER_PATH.posts}/${createPost1.id}`)
+                .expect(HTTP_STATUSES.OK_200, createPost1)
 
-    // })
+    })
 
 
-    // it('should not update entity that not exist', async () => {
-    //     await request(app)
-    //         .put(`${ROUTER_PATH.blogs}/17`)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: 'name',
-    //               description: 'description',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.NOT_FOUND_404)
-    // })
+    it('should not update entity that not exist', async () => {
+        await request(app)
+            .put(`${ROUTER_PATH.posts}/650050e9e9e9659e4c3057cd`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send(
+                { 
+                    title: 'update title 1',
+                    shortDescription: 'update shortDescription 1',
+                    content: 'update content 1',
+                    blogId: blog1.id
+                }
+            )
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+    })
 
    
 
-    // it('should  update entity with correct input data', async () => {
-    //     await request(app)
-    //         .put(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .send(
-    //             { 
-    //               name: 'update name',
-    //               description: 'update description',
-    //               websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }
-    //         )
-    //         .expect(HTTP_STATUSES.NO_CONTENT_204)
+    it('should  update entity with correct input data', async () => {
+
+        const data: PostInputModel = { 
+            title: 'update title 1',
+            shortDescription: 'update shortDescription 1',
+            content: 'update content 1',
+            blogId: blog1.id
+        }
+
+
+        await request(app)
+            .put(`${ROUTER_PATH.posts}/${createPost1.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .send( data )
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
 
-    //     await request(app)
-    //         .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //         .expect(HTTP_STATUSES.OK_200,
-    //                             {   ...newEntity1,
-    //                                 name: 'update name',
-    //                                 description: 'update description',
-    //                                 websiteUrl: 'https://samurai.it-incubator.io/'
-    //                             }
-    //     )
+        await request(app)
+            .get(`${ROUTER_PATH.posts}/${createPost1.id}`)
+            .expect(HTTP_STATUSES.OK_200,
+                                {   ...createPost1,
+                                    title: data.title,
+                                    shortDescription: data.shortDescription,
+                                    content: data.content,
+                                    blogId: blog1.id                
+                                }
+        )
 
-    //     await request(app)
-    //         .get(ROUTER_PATH.blogs)
-    //         .expect(HTTP_STATUSES.OK_200, [
-    //             {   ...newEntity1,
-    //                 name: 'update name',
-    //                 description: 'update description',
-    //                 websiteUrl: 'https://samurai.it-incubator.io/'
-    //             }, 
-    //             newEntity2])
+        await request(app)
+            .get(ROUTER_PATH.posts)
+            .expect(HTTP_STATUSES.OK_200, [
+                {   ...createPost1,
+                    title: data.title,
+                    shortDescription: data.shortDescription,
+                    content: data.content,
+                    blogId: blog1.id   
+                }, 
+                createPost2])
 
       
         
         
-    //     await request(app)
-    //         .get(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
-    //         .expect(HTTP_STATUSES.OK_200, newEntity2)
+        await request(app)
+            .get(`${ROUTER_PATH.posts}/${createPost2.id}`)
+            .expect(HTTP_STATUSES.OK_200, createPost2)
 
-    // })
+    })
     
     
     
-    // it('should delete both entityes', async () => {
-    //     await request(app)
-    //         .delete(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .expect(HTTP_STATUSES.NO_CONTENT_204)
+    it('should delete both entityes', async () => {
+        await request(app)
+            .delete(`${ROUTER_PATH.posts}/${createPost1.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
 
-    //     await request(app)
-    //         .get(`${ROUTER_PATH.blogs}/${newEntity1.id}`)
-    //         .expect(HTTP_STATUSES.NOT_FOUND_404)   
+        await request(app)
+            .get(`${ROUTER_PATH.posts}/${createPost1.id}`)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)   
             
             
-    //     await request(app)
-    //         .delete(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
-    //         .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-    //         .expect(HTTP_STATUSES.NO_CONTENT_204)    
+        await request(app)
+            .delete(`${ROUTER_PATH.posts}/${createPost2.id}`)
+            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)    
 
 
-    //     await request(app)
-    //         .get(`${ROUTER_PATH.blogs}/${newEntity2.id}`)
-    //         .expect(HTTP_STATUSES.NOT_FOUND_404) 
+        await request(app)
+            .get(`${ROUTER_PATH.posts}/${createPost2.id}`)
+            .expect(HTTP_STATUSES.NOT_FOUND_404) 
 
            
-    //     await request(app)
-    //         .get(ROUTER_PATH.blogs)
-    //         .expect(HTTP_STATUSES.OK_200, [])     
-    // })
+        await request(app)
+            .get(ROUTER_PATH.posts)
+            .expect(HTTP_STATUSES.OK_200, [])     
+    })
 
 
 
