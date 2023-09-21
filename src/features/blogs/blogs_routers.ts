@@ -109,7 +109,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
 
 .post('/',
 
-    basicAuth, nameValid, descriptionValid, websiteUrlValid, isBlogCustomValid, inputValidation,
+    basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
 
     async (req: ReqBody<BlogInputModel>, res: Response<BlogViewModel>)  => {
 
