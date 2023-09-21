@@ -22,8 +22,11 @@ import { GetById } from "./models/req_res/get_by_id";
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
 import { nameValid, descriptionValid, websiteUrlValid } from "../../middleware/blogs_validators";
+import { titleValid, shortDescriptionValid, contentValid, blogIdValid} from '../../middleware/posts_validators'
+
+
 import { PostOutputModel, postQueryRepository } from "../../repositories/posts/query_repositories";
-import { WithId } from "mongodb";
+
 import { BlogOutputModel } from "./models/entity/blogOutputModel";
 import { PostInputModel } from "../posts/models/entity/postInputModel";
 
@@ -86,7 +89,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
 
 .post('/:id/posts',
 
-    basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
+    basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, inputValidation,
 
     async (req: ReqBody<PostInputModel>, res: Response<PostOutputModel>)  => {
    

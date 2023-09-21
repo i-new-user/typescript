@@ -18,6 +18,7 @@ const posts_service_1 = require("../../domain/posts_service");
 const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
 const blogs_validators_1 = require("../../middleware/blogs_validators");
+const posts_validators_1 = require("../../middleware/posts_validators");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -57,7 +58,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .post('/:id/posts', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .post('/:id/posts', basic_auth_1.basicAuth, posts_validators_1.titleValid, posts_validators_1.shortDescriptionValid, posts_validators_1.contentValid, posts_validators_1.blogIdValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { title, shortDescription, content, blogId } = req.body;
     const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
     if (!blog) {
