@@ -2,6 +2,8 @@ import { ObjectId, WithId } from 'mongodb';
 import { PostOutputType } from '../../maping/post';
 import { postsCollection } from '../../db';
 import { PostMongoDBModel } from '../../features/posts/models/entity/postMongoDBModel';
+import { PaginatorPostModel } from '../../features/posts/models/entity/postPaginator';
+import { totalmem } from 'os';
 
 
 export type PostOutputModel = {
@@ -16,22 +18,36 @@ export type PostOutputModel = {
 
 export const postQueryRepository = {
 
-    async findPosts(): Promise<PostOutputModel[]> {
+    async findPosts(searchNameTerm: string | null, sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string): Promise<PaginatorPostModel> {
 
-        const posts: WithId<PostMongoDBModel>[] | []= await postsCollection.find({}).toArray()
+        const totalDocuments = await postsCollection.countDocuments()
 
-        return posts.map( post => {
-            return {
+        const posts: WithId<PostMongoDBModel>[] | [] = await postsCollection.find( {} )
+                                                                            .sort( {[sortBy]: sortDirection} )
+                                                                            .skip( (+pageNumber - 1) * +pageSize)
+                                                                            .limit( +pageSize )
+                                                                            .toArray()
+
+        return this._mapPostOutputModel(posts, totalDocuments, +pageNumber, +pageSize)
+
+    },
+
+    _mapPostOutputModel(posts: WithId<PostMongoDBModel>[], totalDocuments: number, pageSize: number, pageNumber: number): PaginatorPostModel {
+        return { 
+            pagesCount: Math.ceil(totalDocuments/pageSize),
+            page: +pageNumber,
+            pageSize: +pageSize,
+            totalCount: +totalDocuments,
+            items:  posts.map( post => ({
                 id: String(post._id),
-                title:	post.title,
+                title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
-                blogId:	post.blogId,
+                blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: post.createdAt           
-            }
-        })
-
+                createdAt: post.createdAt
+            })) 
+        }
     },
 
     async findPostById(id: string): Promise<PostOutputModel | null | undefined> {

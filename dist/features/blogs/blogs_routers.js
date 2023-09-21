@@ -18,7 +18,6 @@ const posts_service_1 = require("../../domain/posts_service");
 const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
 const blogs_validators_1 = require("../../middleware/blogs_validators");
-const query_repositories_2 = require("../../repositories/posts/query_repositories");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -41,7 +40,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
     const pageNumber = 1;
     const pageSize = 10;
-    let foundEntity = yield query_repositories_2.postQueryRepository.findPosts();
+    let foundEntity = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, searchNameTerm, sortDirection, sortBy, String(pageNumber), String(pageSize));
     if (foundEntity) {
         res.send(foundEntity);
     }

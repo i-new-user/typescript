@@ -5,5 +5,5 @@ export type PaginatorPostModel = {
     page: number
     pageSize: number
     totalCount:	number
-    items:	PostViewModel
+    items:	PostViewModel[]
 }

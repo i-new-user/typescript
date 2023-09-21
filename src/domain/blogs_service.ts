@@ -34,33 +34,6 @@ export const blogsService = {
         }
     },
 
-    // async createBlogByIdPost( title: string, shortDescription: string, content: string): Promise<PostOutputModel>{
-
-        
-    //     const newPost: PostMongoDBModel = {
-    //         title: title,
-    //         shortDescription: shortDescription,
-    //         content: content,
-    //         blogId,
-    //         blogName: blogName,
-    //         createdAt: new Date().toISOString(),
-    //     }
-
-    //     const result = await postsCollection.insertOne(newPost)
-
-          
-    //     return   {
-    //         id: String(result.insertedId),
-    //         title: newPost.title,
-    //         shortDescription: newPost.shortDescription,
-    //         content: newPost.content,
-    //         blogId: newPost.blogId,
-    //         blogName: newPost.blogName,
-    //         createdAt: newPost.createdAt
-    //     }
-    // },
-
-
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean>{
         return await blogsRepository.updateBlog(id, name, description, websiteUrl)
     },

@@ -18,14 +18,22 @@ import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from "../../middleware/input_validator";
 import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
 import { titleValid, shortDescriptionValid, contentValid, blogIdValid } from "../../middleware/posts_validators";
+import { PaginatorPostModel } from "./models/entity/postPaginator";
 
 
 export const postsRouter = Router({})
 
 
-postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
-    let posts = await postQueryRepository.findPosts()
-    res.send(posts)
+postsRouter.get('/', async (req: Request, res: Response<PaginatorPostModel>) => {
+
+  const searchNameTerm = null
+  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
+  const pageNumber = 1
+  const pageSize = 10
+
+  let foundEntityes: PaginatorPostModel = await postQueryRepository.findPosts(searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize) )
+  res.send(foundEntityes)
 })
 
 .get('/:id', async (req: ReqParams<GetById>, res: Response<PostViewModel>) => {

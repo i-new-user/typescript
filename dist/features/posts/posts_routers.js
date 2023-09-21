@@ -21,8 +21,14 @@ const blog_custom_validator_1 = require("../../middleware/blog_custom_validator"
 const posts_validators_1 = require("../../middleware/posts_validators");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let posts = yield query_repositories_2.postQueryRepository.findPosts();
-    res.send(posts);
+    var _a;
+    const searchNameTerm = null;
+    const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    const pageNumber = 1;
+    const pageSize = 10;
+    let foundEntityes = yield query_repositories_2.postQueryRepository.findPosts(searchNameTerm, sortDirection, sortBy, String(pageNumber), String(pageSize));
+    res.send(foundEntityes);
 }))
     .get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let post = yield query_repositories_2.postQueryRepository.findPostById(req.params.id);

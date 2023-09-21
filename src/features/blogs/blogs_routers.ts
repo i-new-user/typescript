@@ -46,7 +46,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
 
 
 
-.get('/:id/posts', async ( req: Request, res: Response<PostOutputModel[] | null>)  => {
+.get('/:id/posts', async ( req: Request, res: Response<PaginatorPostModel>)  => {
 
   const isEntity: BlogOutputModel | null = await blogsQueryRepository.findBlogById(req.params.id)
 
@@ -61,7 +61,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
   const pageSize = 10
 
 
-  let foundEntity: PostOutputModel[] = await postQueryRepository.findPosts()
+  let foundEntity: PaginatorPostModel = await blogsQueryRepository.findBlogByIdPosts(req.params.id, searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize))
  
   if(foundEntity){
     res.send(foundEntity)
