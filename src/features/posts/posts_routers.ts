@@ -1,48 +1,37 @@
-
 import { Request, Response, Router } from "express";
-
 
 import { HTTP_STATUSES } from "../../http/statuses";
 
-import { body } from "express-validator";
+import { postsService } from "../../domain/posts_service";
+import { blogsQueryRepository } from "../../repositories/blogs/query_repositories";
+import { postQueryRepository } from "../../repositories/posts/query_repositories";
 
-import { PostViewModel } from "./models/view_model";
-import { PostInputModel } from "./models/input_model";
+import { PostViewModel } from "./models/entity/postViewModel";
+import { PostInputModel } from "./models/entity/postInputModel";
 
-import { GetById } from "./models/get_by_id";
-import { ReqBody } from "./models/req_body";
-import { ReqParamsAndBodyPost } from "./models/req_params_and_body";
-import { ReqParams } from "./models/req_params";
-import { ReqQuery } from "./models/req_query";
-
-import { postsRepository } from "../../repositories/posts_repositoriy";
-import { blogsRepository } from "../../repositories/blogs_repositoriy";
+import { ReqBody } from "./models/req_res/req_body";
+import { ReqParams } from "./models/req_res/req_params";
+import { ReqParamsAndBodyPost } from "./models/req_res/req_params_and_body";
+import { GetById } from "./models/req_res/get_by_id";
 
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from "../../middleware/input_validator";
 import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
+import { titleValid, shortDescriptionValid, contentValid, blogIdValid } from "../../middleware/posts_validators";
 
 
 export const postsRouter = Router({})
 
-let titleValid = body('title').isString().trim().isLength({min: 1, max:30})
-let shortDescriptionValid = body('shortDescription').trim().isString().isLength({min: 1, max:100})
-let contentValid = body('content').trim().isString().isLength({min: 1, max:1000})
-let blogIdValid = body('blogId').isString()
-
-
 
 postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
-
-    let posts = await postsRepository.findPosts()
+    let posts = await postQueryRepository.findPosts()
     res.send(posts)
 })
 
 .get('/:id', async (req: ReqParams<GetById>, res: Response<PostViewModel>) => {
 
-    let post = await postsRepository.findPostById(req.params.id)
-   
-
+    let post = await postQueryRepository.findPostById(req.params.id)
+    
     if(post){
       res.send(post)
     } else {
@@ -50,12 +39,13 @@ postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
     }
 })
 
+
 .delete('/:id',
     basicAuth, 
     
     async (req: ReqParams<GetById>, res: Response)  => {
 
-    let isDeleted = await postsRepository.deletePost(req.params.id)
+    let isDeleted = await postsService.deletePost(req.params.id)
 
     if(isDeleted){
       res.send(HTTP_STATUSES.NO_CONTENT_204)
@@ -72,8 +62,14 @@ postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
   async (req: ReqBody<PostInputModel>, res: Response<PostViewModel>)  => {
   
   const { title, shortDescription, content, blogId} = req.body
+
+  const blog = await blogsQueryRepository.findBlogById(blogId)
+
+  if(!blog){
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+  }
       
-  let newPosts = await postsRepository.createPost(title, shortDescription, content, blogId)
+  let newPosts = await postsService.createPost(title, shortDescription, content, blogId, blog.name)
       res.status(HTTP_STATUSES.CREATED_201).send(newPosts)
 })
   
@@ -84,7 +80,7 @@ postsRouter.get('/', async (req: Request, res: Response<PostViewModel[]>) => {
   
   async ( req: ReqParamsAndBodyPost<GetById, PostInputModel>, res: Response<PostViewModel>)  => {
   
-  let isUpdate = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+  let isUpdate = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
   
   if(isUpdate){
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)

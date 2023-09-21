@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isBlogCustomValid = void 0;
 const express_validator_1 = require("express-validator");
-const blogs_repositoriy_1 = require("../repositories/blogs_repositoriy");
+const query_repositories_1 = require("../repositories/blogs/query_repositories");
 exports.isBlogCustomValid = (0, express_validator_1.body)('blogId').custom((blogId) => __awaiter(void 0, void 0, void 0, function* () {
-    const blog = yield blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
+    const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
     if (!blog) {
         throw Error('Does not blog');
     }

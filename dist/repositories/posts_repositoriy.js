@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
-const blogs_repositoriy_1 = require("./blogs_repositoriy");
 const db_1 = require("../db");
 const mongodb_1 = require("mongodb");
 let posts = [
@@ -101,28 +100,10 @@ exports.postsRepository = {
             }
         });
     },
-    createPost(title, shortDescription, content, blogId) {
+    createPost(newPost) {
         return __awaiter(this, void 0, void 0, function* () {
-            const blog = yield blogs_repositoriy_1.blogsRepository.findBlogById(blogId);
-            const newPost = {
-                _id: new mongodb_1.ObjectId(),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blogId,
-                blogName: blog.name,
-                createdAt: new Date().toISOString(),
-            };
             const result = yield db_1.postsCollection.insertOne(newPost);
-            return {
-                id: String(result.insertedId),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                blogId: newPost.blogId,
-                blogName: blog.name,
-                createdAt: newPost.createdAt
-            };
+            return newPost;
         });
     },
     updatePost(id, title, shortDescription, content, blogId) {

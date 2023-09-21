@@ -1,7 +1,7 @@
 import request from 'supertest'
-import { app, ROUTER_PATH } from "../../app"
-import { HTTP_STATUSES, HttpStatusType } from "../../http/statuses"
-import { PostInputModel } from './models/input_model'
+import { app, ROUTER_PATH } from "../../../app"
+import { HTTP_STATUSES, HttpStatusType } from "../../../http/statuses"
+import { PostInputModel } from '../models/entity/postInputModel'
 
 
 

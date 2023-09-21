@@ -1,4 +1,4 @@
-import { FieldError } from './field_error';
+import { FieldError } from './fieldErrors';
 
 export type APIErrorResult = {
     errorsMessages: Array<FieldError>

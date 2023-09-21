@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
-import { blogsRepository } from "../repositories/blogs_repositoriy";
-import { postsRepository } from '../repositories/posts_repositoriy';
+import { blogsRepository } from "../repositories/blogs/command_repositories";
+import { postsRepository } from '../repositories/posts/command_repositories';
 import { HTTP_STATUSES } from "../http/statuses";
 
 

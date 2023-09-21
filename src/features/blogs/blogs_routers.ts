@@ -1,49 +1,67 @@
-import { body, validationResult } from 'express-validator';
-
 import { Request, Response, Router } from "express";
-import { ROUTER_PATH, RouterPathType } from '../../app';
 
 import { HTTP_STATUSES } from "../../http/statuses";
 
-import { BlogViewModel } from "./models/view_model";
-import { BlogInputModel } from './models/input_model';
-import { BlogModel } from './models/blog_model';
+import { blogsService } from '../../domain/blogs_service';
+import { blogsQueryRepository } from '../../repositories/blogs/query_repositories';
 
+import { postsService } from "../../domain/posts_service";
 
-import { ReqBody } from "./models/req_body";
-import { ReqParams } from "./models/req_params";
-import { ReqParamsAndBody } from "./models/req_params_and_body";
-import { ReqQuery } from "./models/req_query";
-import { GetById } from "./models/get_by_id";
+import { BlogViewModel } from "./models/entity/blogViewModel";
+import { BlogInputModel } from './models/entity/blogInputModel';
+import { BlogModel } from './models/entity/blogModel';
+import { BlogMongoDBModel } from "./models/entity/blogMongoDBModel";
+import { PaginatorBlogModel } from "./models/entity/blogPaginator";
+import { PaginatorPostModel } from "../posts/models/entity/postPaginator";
 
-import { blogsRepository } from "../../repositories/blogs_repositoriy";
+import { ReqBody } from "./models/req_res/req_body";
+import { ReqParams } from "./models/req_res/req_params";
+import { ReqParamsAndBody } from "./models/req_res/req_params_and_body";
+import { GetById } from "./models/req_res/get_by_id";
 
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
-
-
+import { nameValid, descriptionValid, websiteUrlValid } from "../../middleware/blogs_validators";
+import { PostOutputModel, postQueryRepository } from "../../repositories/posts/query_repositories";
+import { WithId } from "mongodb";
+import { BlogOutputModel } from "./models/entity/blogOutputModel";
+import { PostInputModel } from "../posts/models/entity/postInputModel";
 
 
 export const blogsRouter = Router({})
+                                                                                                
 
-let nameValid = body('name').isString().trim().isLength({min: 1, max:15})
-let descriptionValid = body('description').trim().isString().isLength({min: 1, max:500})
-let websiteUrlValid = body('websiteUrl').trim().isString().isLength({min: 1, max:100}).matches('^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
- 
-                                                                                                  
+blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  => {
 
+  const searchNameTerm = null
+  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
+  const pageNumber = 1
+  const pageSize = 10
 
-
-blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogViewModel[]>)  => {
-
-    let foundEntityes: BlogModel[] = await blogsRepository.findBlogs()
+    let foundEntityes: PaginatorBlogModel = await blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize) )
     res.send(foundEntityes)
 })
 
 
-.get('/:id', async ( req: ReqParams<GetById >, res: Response<BlogViewModel>)  => {
 
-  let foundEntity: BlogModel | null | undefined = await blogsRepository.findBlogById(req.params.id)
+
+.get('/:id/posts', async ( req: Request, res: Response<PostOutputModel[] | null>)  => {
+
+  const isEntity: BlogOutputModel | null = await blogsQueryRepository.findBlogById(req.params.id)
+
+  if(!isEntity){
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+  }
+
+  const searchNameTerm = null
+  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
+  const pageNumber = 1
+  const pageSize = 10
+
+
+  let foundEntity: PostOutputModel[] = await postQueryRepository.findPosts()
  
   if(foundEntity){
     res.send(foundEntity)
@@ -54,21 +72,36 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
 
 
-.delete('/:id', 
+.get('/:id', async ( req: ReqParams<GetById >, res: Response<BlogViewModel | null>)  => {
 
-  basicAuth,
-
-  async (req: ReqParams<GetById>, res: Response)  => {
-
-  let isDeleted = await blogsRepository.deleteBlog(req.params.id)
-
-  if(isDeleted){
-    res.send(HTTP_STATUSES.NO_CONTENT_204)
+  let foundEntity: BlogModel | null = await blogsQueryRepository.findBlogById(req.params.id)
+ 
+  if(foundEntity){
+    res.send(foundEntity)
   } else {
-    res.send(HTTP_STATUSES.NOT_FOUND_404)
+    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
 })
 
+
+.post('/:id/posts',
+
+    basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
+
+    async (req: ReqBody<PostInputModel>, res: Response<PostOutputModel>)  => {
+   
+
+    let {title, shortDescription, content, blogId} = req.body
+
+    const blog = await blogsQueryRepository.findBlogById(blogId)
+
+    if(!blog){
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    }
+
+    let newPost: PostOutputModel = await postsService.createPost( title, shortDescription, content, blogId, blog.name)
+    res.status(HTTP_STATUSES.CREATED_201).send(newPost)
+})
 
 .post('/',
 
@@ -78,7 +111,7 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
     let {name, description, websiteUrl} = req.body
 
-    let newBlog = await blogsRepository.createBlog( name, description, websiteUrl)
+    let newBlog = await blogsService.createBlog( name, description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
 })
 
@@ -89,7 +122,7 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
   async ( req: ReqParamsAndBody<GetById, BlogInputModel>, res: Response<BlogViewModel>)  => {
 
-  let isUpdate = await blogsRepository.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
+  let isUpdate = await blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)
   
   if(isUpdate){
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
@@ -99,6 +132,21 @@ blogsRouter.get('/', async ( req: ReqParams<BlogViewModel>, res: Response<BlogVi
 
 })  
 
+
+.delete('/:id', 
+
+basicAuth,
+
+async (req: ReqParams<GetById>, res: Response)  => {
+
+let isDeleted = await blogsService.deleteBlog(req.params.id)
+
+  if(isDeleted){
+    res.send(HTTP_STATUSES.NO_CONTENT_204)
+  } else {
+    res.send(HTTP_STATUSES.NOT_FOUND_404)
+  }
+})
 
 
 .delete('/testing/all-data',

@@ -49,25 +49,10 @@ exports.blogsRepository = {
             }
         });
     },
-    createBlog(name, description, websiteUrl) {
+    createBlog(newBlog) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newBlog = {
-                _id: new mongodb_1.ObjectId(),
-                name: name,
-                description: description,
-                websiteUrl: websiteUrl,
-                createdAt: new Date().toISOString(),
-                isMembership: false
-            };
             const result = yield db_1.blogsCollection.insertOne(newBlog);
-            return {
-                id: String(result.insertedId),
-                name: newBlog.name,
-                description: newBlog.description,
-                websiteUrl: newBlog.websiteUrl,
-                createdAt: newBlog.createdAt,
-                isMembership: newBlog.isMembership
-            };
+            return newBlog;
         });
     },
     updateBlog(id, name, description, websiteUrl) {

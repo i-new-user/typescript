@@ -10,22 +10,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRouter = void 0;
-const express_validator_1 = require("express-validator");
 const express_1 = require("express");
 const statuses_1 = require("../../http/statuses");
-const blogs_repositoriy_1 = require("../../repositories/blogs_repositoriy");
+const blogs_service_1 = require("../../domain/blogs_service");
+const query_repositories_1 = require("../../repositories/blogs/query_repositories");
+const posts_service_1 = require("../../domain/posts_service");
 const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
+const blogs_validators_1 = require("../../middleware/blogs_validators");
+const query_repositories_2 = require("../../repositories/posts/query_repositories");
 exports.blogsRouter = (0, express_1.Router)({});
-let nameValid = (0, express_validator_1.body)('name').isString().trim().isLength({ min: 1, max: 15 });
-let descriptionValid = (0, express_validator_1.body)('description').trim().isString().isLength({ min: 1, max: 500 });
-let websiteUrlValid = (0, express_validator_1.body)('websiteUrl').trim().isString().isLength({ min: 1, max: 100 }).matches('^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let foundEntityes = yield blogs_repositoriy_1.blogsRepository.findBlogs();
+    var _a;
+    const searchNameTerm = null;
+    const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    const pageNumber = 1;
+    const pageSize = 10;
+    let foundEntityes = yield query_repositories_1.blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy, String(pageNumber), String(pageSize));
     res.send(foundEntityes);
 }))
-    .get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let foundEntity = yield blogs_repositoriy_1.blogsRepository.findBlogById(req.params.id);
+    .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const isEntity = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
+    if (!isEntity) {
+        return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+    const searchNameTerm = null;
+    const sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : "createdAt";
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    const pageNumber = 1;
+    const pageSize = 10;
+    let foundEntity = yield query_repositories_2.postQueryRepository.findPosts();
     if (foundEntity) {
         res.send(foundEntity);
     }
@@ -33,27 +49,45 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .delete('/:id', basic_auth_1.basicAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let isDeleted = yield blogs_repositoriy_1.blogsRepository.deleteBlog(req.params.id);
-    if (isDeleted) {
-        res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    .get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let foundEntity = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
+    if (foundEntity) {
+        res.send(foundEntity);
     }
     else {
-        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .post('/', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .post('/:id/posts', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { title, shortDescription, content, blogId } = req.body;
+    const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
+    if (!blog) {
+        return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+    let newPost = yield posts_service_1.postsService.createPost(title, shortDescription, content, blogId, blog.name);
+    res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newPost);
+}))
+    .post('/', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { name, description, websiteUrl } = req.body;
-    let newBlog = yield blogs_repositoriy_1.blogsRepository.createBlog(name, description, websiteUrl);
+    let newBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newBlog);
 }))
-    .put('/:id', basic_auth_1.basicAuth, nameValid, descriptionValid, websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let isUpdate = yield blogs_repositoriy_1.blogsRepository.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
+    .put('/:id', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let isUpdate = yield blogs_service_1.blogsService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
     if (isUpdate) {
         res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
     else {
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+}))
+    .delete('/:id', basic_auth_1.basicAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let isDeleted = yield blogs_service_1.blogsService.deleteBlog(req.params.id);
+    if (isDeleted) {
+        res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    }
+    else {
+        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
     .delete('/testing/all-data', basic_auth_1.basicAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

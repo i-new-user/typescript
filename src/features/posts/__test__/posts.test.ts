@@ -1,12 +1,13 @@
 import request from 'supertest'
-import { app, ROUTER_PATH } from '../../app'
+import { app, ROUTER_PATH } from '../../../app'
 
-import { HTTP_STATUSES } from '../../http/statuses'
+import { HTTP_STATUSES } from '../../../http/statuses'
 
-import { PostInputModel } from './models/input_model'
+import { PostInputModel } from '../models/entity/postInputModel'
 import { postTestManager } from './post_test_manager'
 
-import { blogsRepository } from '../../repositories/blogs_repositoriy'
+import { postsRepository } from '../../../repositories/posts/command_repositories'
+import { blogsService } from '../../../domain/blogs_service'
 
 
 
@@ -65,7 +66,7 @@ describe('test for /posts', () => {
 
     it('should create entity1 with correct input data', async () => {
 
-        blog1 = await blogsRepository.createBlog('create name 1111111', 'create description 111111', 'create websiteUrl 111111')
+        blog1 = await blogsService.createBlog('create name 1111111', 'create description 111111', 'create websiteUrl 111111')
 
 
         const data: PostInputModel = { 
@@ -89,7 +90,7 @@ describe('test for /posts', () => {
 
     it('should create entity2 with correct input data', async () => {
 
-        blog2 = await blogsRepository.createBlog('create name 2222', 'create description 222222', 'create websiteUrl 22222')
+        blog2 = await blogsService.createBlog('create name 2222', 'create description 222222', 'create websiteUrl 22222')
 
         
         const data: PostInputModel = { 

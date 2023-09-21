@@ -29,7 +29,7 @@ describe('test for /blogs', () => {
     }));
     it('should return 404 for not existing entity', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
-            .get(`${app_1.ROUTER_PATH.blogs}/1`)
+            .get(`${app_1.ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
             .expect(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
     it('should not create entity with incorrect input data', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,7 +49,7 @@ describe('test for /blogs', () => {
         const data = {
             name: 'name',
             description: 'description',
-            websiteUrl: 'https://samurai.it-incubator.io/'
+            websiteUrl: 'https://samurai.it-incubator.io/',
         };
         const { createEntity } = yield blog_test_manager_1.blogTestManager.createBlog(data);
         createBlog1 = createEntity;
@@ -86,7 +86,7 @@ describe('test for /blogs', () => {
     }));
     it('should not update entity that not exist', () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.default)(app_1.app)
-            .put(`${app_1.ROUTER_PATH.blogs}/17`)
+            .put(`${app_1.ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
             .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
             .send({
             name: 'name',
