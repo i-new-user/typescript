@@ -19,6 +19,7 @@ const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
 const blogs_validators_1 = require("../../middleware/blogs_validators");
 const posts_validators_1 = require("../../middleware/posts_validators");
+const blog_custom_validator_1 = require("../../middleware/blog_custom_validator");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -67,7 +68,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     let newPost = yield posts_service_1.postsService.createPost(title, shortDescription, content, blogId, blog.name);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newPost);
 }))
-    .post('/', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .post('/', basic_auth_1.basicAuth, blogs_validators_1.nameValid, blogs_validators_1.descriptionValid, blogs_validators_1.websiteUrlValid, blog_custom_validator_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { name, description, websiteUrl } = req.body;
     let newBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(newBlog);

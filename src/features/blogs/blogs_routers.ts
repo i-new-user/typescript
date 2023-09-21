@@ -22,7 +22,8 @@ import { GetById } from "./models/req_res/get_by_id";
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
 import { nameValid, descriptionValid, websiteUrlValid } from "../../middleware/blogs_validators";
-import { titleValid, shortDescriptionValid, contentValid, blogIdValid} from '../../middleware/posts_validators'
+import { titleValid, shortDescriptionValid, contentValid, blogIdValid } from '../../middleware/posts_validators'
+import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
 
 
 import { PostOutputModel, postQueryRepository } from "../../repositories/posts/query_repositories";
@@ -108,7 +109,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
 
 .post('/',
 
-    basicAuth, nameValid, descriptionValid, websiteUrlValid, inputValidation,
+    basicAuth, nameValid, descriptionValid, websiteUrlValid, isBlogCustomValid, inputValidation,
 
     async (req: ReqBody<BlogInputModel>, res: Response<BlogViewModel>)  => {
 

@@ -10,9 +10,6 @@ export const postsRepository = {
         return newPost
     },
 
-    
-
-
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean>{
 
         const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
