@@ -58,8 +58,9 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .post('/:id/posts', basic_auth_1.basicAuth, posts_validators_1.titleValid, posts_validators_1.shortDescriptionValid, posts_validators_1.contentValid, posts_validators_1.blogIdValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { title, shortDescription, content, blogId } = req.body;
+    .post('/:id/posts', basic_auth_1.basicAuth, posts_validators_1.titleValid, posts_validators_1.shortDescriptionValid, posts_validators_1.contentValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let blogId = req.params.id;
+    let { title, shortDescription, content } = req.body;
     const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
     if (!blog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);

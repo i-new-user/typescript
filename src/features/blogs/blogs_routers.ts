@@ -1,3 +1,4 @@
+import { blogIdValid } from './../../middleware/posts_validators';
 import { Request, Response, Router } from "express";
 
 import { HTTP_STATUSES } from "../../http/statuses";
@@ -90,12 +91,13 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
 
 .post('/:id/posts',
 
-    basicAuth, titleValid, shortDescriptionValid, contentValid, blogIdValid, inputValidation,
+    basicAuth, titleValid, shortDescriptionValid, contentValid, inputValidation,
 
-    async (req: ReqBody<PostInputModel>, res: Response<PostOutputModel>)  => {
+    async (req: ReqParamsAndBody<GetById, PostInputModel>, res: Response<PostOutputModel>)  => {
    
-
-    let {title, shortDescription, content, blogId} = req.body
+    let blogId = req.params.id
+    
+    let {title, shortDescription, content} = req.body
 
     const blog = await blogsQueryRepository.findBlogById(blogId)
 

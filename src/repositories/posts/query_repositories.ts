@@ -24,7 +24,7 @@ export const postQueryRepository = {
 
         const posts: WithId<PostMongoDBModel>[] | [] = await postsCollection.find( {} )
                                                                             .sort( {[sortBy]: sortDirection} )
-                                                                            .skip( (+pageNumber - 1) * +pageSize)
+                                                                            .skip( (+pageNumber-1) * +pageSize)
                                                                             .limit( +pageSize )
                                                                             .toArray()
 
@@ -50,7 +50,7 @@ export const postQueryRepository = {
         }
     },
 
-    async findPostById(id: string): Promise<PostOutputModel | null | undefined> {
+    async findPostById(id: string): Promise<PostOutputModel | null> {
 
         const post: WithId<PostMongoDBModel> | null = await postsCollection.findOne({_id: new ObjectId(id)})
 
