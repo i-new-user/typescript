@@ -18,7 +18,7 @@ export type PostOutputModel = {
 
 export const postQueryRepository = {
 
-    async findPosts(searchNameTerm: string | null, sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string): Promise<PaginatorPostModel> {
+    async findPosts( sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string): Promise<PaginatorPostModel> {
 
         const totalDocuments = await postsCollection.countDocuments()
 

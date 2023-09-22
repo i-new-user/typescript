@@ -26,13 +26,12 @@ export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response<PaginatorPostModel>) => {
 
-  const searchNameTerm = null
-  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortBy = req.query.sortBy as string ?? "createdAt"
   const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
-  const pageNumber = 1
-  const pageSize = 10
+  const pageNumber = req.query.pageNumber as string ?? '1'
+  const pageSize = req.query.pageSize as string ?? '10'
 
-  let foundEntityes: PaginatorPostModel = await postQueryRepository.findPosts(searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize) )
+  let foundEntityes: PaginatorPostModel = await postQueryRepository.findPosts( sortDirection, sortBy, pageNumber, pageSize )
   res.send(foundEntityes)
 })
 

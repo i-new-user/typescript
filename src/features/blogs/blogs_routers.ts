@@ -23,7 +23,7 @@ import { GetById } from "./models/req_res/get_by_id";
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
 import { nameValid, descriptionValid, websiteUrlValid } from "../../middleware/blogs_validators";
-import { titleValid, shortDescriptionValid, contentValid, blogIdValid } from '../../middleware/posts_validators'
+import { titleValid, shortDescriptionValid, contentValid } from '../../middleware/posts_validators'
 import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
 
 
@@ -38,13 +38,13 @@ export const blogsRouter = Router({})
 
 blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  => {
 
-  const searchNameTerm = null
+  const searchNameTerm = req.query.searchNameTerm as string ?? null
   const sortBy = req.query.sortBy ?? "createdAt"
   const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
-  const pageNumber = 1
-  const pageSize = 10
+  const pageNumber = req.query.pageNumber as string ?? '1'
+  const pageSize = req.query.pageSize as string ?? '10'
 
-    let foundEntityes: PaginatorBlogModel = await blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize) )
+    let foundEntityes: PaginatorBlogModel = await blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy as string, pageNumber, pageSize )
     res.send(foundEntityes)
 })
 
@@ -96,7 +96,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
     async (req: ReqParamsAndBody<GetById, PostInputModel>, res: Response<PostOutputModel>)  => {
    
     let blogId = req.params.id
-    
+
     let {title, shortDescription, content} = req.body
 
     const blog = await blogsQueryRepository.findBlogById(blogId)

@@ -21,23 +21,23 @@ const blogs_validators_1 = require("../../middleware/blogs_validators");
 const posts_validators_1 = require("../../middleware/posts_validators");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const searchNameTerm = null;
-    const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
+    var _a, _b, _c, _d;
+    const searchNameTerm = (_a = req.query.searchNameTerm) !== null && _a !== void 0 ? _a : null;
+    const sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : "createdAt";
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
-    const pageNumber = 1;
-    const pageSize = 10;
-    let foundEntityes = yield query_repositories_1.blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy, String(pageNumber), String(pageSize));
+    const pageNumber = (_c = req.query.pageNumber) !== null && _c !== void 0 ? _c : '1';
+    const pageSize = (_d = req.query.pageSize) !== null && _d !== void 0 ? _d : '10';
+    let foundEntityes = yield query_repositories_1.blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy, pageNumber, pageSize);
     res.send(foundEntityes);
 }))
     .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _e;
     const isEntity = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
     if (!isEntity) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
     const searchNameTerm = null;
-    const sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : "createdAt";
+    const sortBy = (_e = req.query.sortBy) !== null && _e !== void 0 ? _e : "createdAt";
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
     const pageNumber = 1;
     const pageSize = 10;
