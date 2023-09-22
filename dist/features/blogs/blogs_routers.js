@@ -39,7 +39,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortBy = (_e = req.query.sortBy) !== null && _e !== void 0 ? _e : "createdAt";
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
     const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
-    const pageSize = (_g = req.query.sortBy) !== null && _g !== void 0 ? _g : '10';
+    const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
     let foundEntity = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, sortDirection, sortBy, pageNumber, pageSize);
     if (foundEntity) {
         res.send(foundEntity);

@@ -39,12 +39,12 @@ export const blogsRouter = Router({})
 blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  => {
 
   const searchNameTerm = req.query.searchNameTerm as string ?? null
-  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortBy = req.query.sortBy as string ?? "createdAt"
   const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
 
-    let foundEntityes: PaginatorBlogModel = await blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy as string, pageNumber, pageSize )
+    let foundEntityes: PaginatorBlogModel = await blogsQueryRepository.findBlogs(searchNameTerm, sortDirection, sortBy, pageNumber, pageSize )
     res.send(foundEntityes)
 })
 
@@ -62,7 +62,7 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
   const sortBy = req.query.sortBy as string ?? "createdAt"
   const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
   const pageNumber = req.query.pageNumber as string ?? '1'
-  const pageSize = req.query.sortBy as string ?? '10'
+  const pageSize = req.query.pageSize as string ?? '10'
 
 
   let foundEntity: PaginatorPostModel = await blogsQueryRepository.findBlogByIdPosts(req.params.id, sortDirection, sortBy , pageNumber, pageSize)

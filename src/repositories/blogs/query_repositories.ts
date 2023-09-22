@@ -16,7 +16,7 @@ export const blogsQueryRepository = {
 
     async findBlogs( searchNameTerm: string | null, sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string ): Promise<PaginatorBlogModel> {
 
-        const totalDocuments = await blogsCollection.countDocuments()
+        const totalDocuments = await blogsCollection.countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'}})
 
         const blogs: WithId<BlogMongoDBModel>[] | [] = await blogsCollection.find({name: {$regex: searchNameTerm ?? '', $options: 'i'}})
                                                                             .sort({[sortBy]: sortDirection})
