@@ -32,7 +32,7 @@ export const postQueryRepository = {
 
     },
 
-    _mapPostOutputModel(posts: WithId<PostMongoDBModel>[], totalDocuments: number, pageSize: number, pageNumber: number): PaginatorPostModel {
+    _mapPostOutputModel(posts: WithId<PostMongoDBModel>[], totalDocuments: number, pageNumber: number, pageSize: number): PaginatorPostModel {
         return { 
             pagesCount: Math.ceil(totalDocuments/pageSize),
             page: +pageNumber,

@@ -59,14 +59,13 @@ blogsRouter.get('/', async ( req: Request, res: Response<PaginatorBlogModel>)  =
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
 
-  const searchNameTerm = null
-  const sortBy = req.query.sortBy ?? "createdAt"
+  const sortBy = req.query.sortBy as string ?? "createdAt"
   const sortDirection = req.query.sortDirection === "asc" ? 1 : -1
-  const pageNumber = 1
-  const pageSize = 10
+  const pageNumber = req.query.pageNumber as string ?? '1'
+  const pageSize = req.query.sortBy as string ?? '10'
 
 
-  let foundEntity: PaginatorPostModel = await blogsQueryRepository.findBlogByIdPosts(req.params.id, searchNameTerm, sortDirection, sortBy as string, String(pageNumber), String(pageSize))
+  let foundEntity: PaginatorPostModel = await blogsQueryRepository.findBlogByIdPosts(req.params.id, sortDirection, sortBy , pageNumber, pageSize)
  
   if(foundEntity){
     res.send(foundEntity)

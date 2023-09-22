@@ -18,7 +18,7 @@ export const blogsQueryRepository = {
 
         const totalDocuments = await blogsCollection.countDocuments()
 
-        const blogs: WithId<BlogMongoDBModel>[] | [] = await blogsCollection.find({})
+        const blogs: WithId<BlogMongoDBModel>[] | [] = await blogsCollection.find({name: {$regex: searchNameTerm ?? '', $options: 'i'}})
                                                                             .sort({[sortBy]: sortDirection})
                                                                             .skip((+pageNumber-1) * +pageSize)
                                                                             .limit(+pageSize)
@@ -66,11 +66,11 @@ export const blogsQueryRepository = {
 
     },
 
-    async findBlogByIdPosts(id: string , searchNameTerm: string | null, sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string): Promise<PaginatorPostModel> {
+    async findBlogByIdPosts(id: string, sortDirection: 1 | -1, sortBy: string, pageNumber: string, pageSize: string): Promise<PaginatorPostModel> {
 
-        const totalDocuments = await postsCollection.countDocuments()
+        const totalDocuments = await postsCollection.countDocuments({blogId: id})
 
-        const posts: WithId<PostMongoDBModel>[] | [] = await postsCollection.find({})
+        const posts: WithId<PostMongoDBModel>[] | [] = await postsCollection.find({blogId: id})
                                                                      .sort({[sortBy]: sortDirection})
                                                                      .skip((+pageNumber-1) * +pageSize)
                                                                      .limit(+pageSize)

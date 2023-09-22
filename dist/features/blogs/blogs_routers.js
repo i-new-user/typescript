@@ -31,17 +31,16 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.send(foundEntityes);
 }))
     .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e;
+    var _e, _f, _g;
     const isEntity = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
     if (!isEntity) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
-    const searchNameTerm = null;
     const sortBy = (_e = req.query.sortBy) !== null && _e !== void 0 ? _e : "createdAt";
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
-    const pageNumber = 1;
-    const pageSize = 10;
-    let foundEntity = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, searchNameTerm, sortDirection, sortBy, String(pageNumber), String(pageSize));
+    const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
+    const pageSize = (_g = req.query.sortBy) !== null && _g !== void 0 ? _g : '10';
+    let foundEntity = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, sortDirection, sortBy, pageNumber, pageSize);
     if (foundEntity) {
         res.send(foundEntity);
     }
