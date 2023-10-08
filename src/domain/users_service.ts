@@ -18,6 +18,8 @@ export const usersService = {
         const newUser: UserMongoDBModel = {
             login: login,
             email: email,
+            passwordHash,
+            passwordSalt,
             createdAt: new Date().toISOString()
         }
 
@@ -27,8 +29,6 @@ export const usersService = {
             id: String(result.insertedId),
             login: newUser.login,
             email: newUser.email,
-            passwordHash,
-            passwordSalt,
             createdAt: newUser.createdAt
         }
 

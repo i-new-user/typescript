@@ -8,9 +8,9 @@ import { usersService } from "../../domain/users_service";
 export const authRouter = Router({})
 
 authRouter.post('/', async (req: Request, res: Response) => {
-    const checkResult = await usersService.checkCredentials(req.body.loginOrMail, req.body.passwors)
+    const checkResult = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
     if(checkResult){
-        res.status(HTTP_STATUSES.CREATED_201)
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     } else {
         res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
     }
