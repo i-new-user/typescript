@@ -15,7 +15,7 @@ export const usersQueryRepository = {
     async findUsers(sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string, 
                     searchLoginTerm: string | null, searchEmailTerm: string | null): Promise<PaginatorUserModel> {
 
-                        const filter = {$or: [
+        const filter = {$or: [
                             {login: {$regex: searchLoginTerm ?? '', $options: 'i' }},
                             {email: {$regex: searchEmailTerm ?? '', $options: 'i' }}
                             ] } 
