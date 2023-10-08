@@ -15,12 +15,15 @@ export const usersQueryRepository = {
     async findUsers(sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string, 
                     searchLoginTerm: string | null, searchEmailTerm: string | null): Promise<PaginatorUserModel> {
 
-        const totalDocuments = await usersCollection.countDocuments( {$or: [
-                                                                           {login: {$regex: searchLoginTerm ?? '', $options: 'i' }},
-                                                                           {email: {$regex: searchEmailTerm ?? '', $options: 'i' }}
-                                                                           ] } )
+                        const filter = {$or: [
+                            {login: {$regex: searchLoginTerm ?? '', $options: 'i' }},
+                            {email: {$regex: searchEmailTerm ?? '', $options: 'i' }}
+                            ] } 
 
-        const users: WithId<UserMongoDBModel>[] | [] = await usersCollection.find()
+        const totalDocuments = await usersCollection.countDocuments( filter )
+
+
+        const users: WithId<UserMongoDBModel>[] | [] = await usersCollection.find( filter )
                                                                             .sort({[sortBy]: sortDirection})
                                                                             .skip((+pageNumber-1) * +pageSize)
                                                                             .limit(+pageSize)
