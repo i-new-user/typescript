@@ -1,4 +1,3 @@
-import { blogIdValid } from './../../middleware/posts_validators';
 import { Request, Response, Router } from "express";
 
 import { HTTP_STATUSES } from "../../http/statuses";
@@ -11,7 +10,6 @@ import { postsService } from "../../domain/posts_service";
 import { BlogViewModel } from "./models/entity/blogViewModel";
 import { BlogInputModel } from './models/entity/blogInputModel';
 import { BlogModel } from './models/entity/blogModel';
-import { BlogMongoDBModel } from "./models/entity/blogMongoDBModel";
 import { PaginatorBlogModel } from "./models/entity/blogPaginator";
 import { PaginatorPostModel } from "../posts/models/entity/postPaginator";
 
@@ -24,10 +22,8 @@ import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from '../../middleware/input_validator';
 import { nameValid, descriptionValid, websiteUrlValid } from "../../middleware/blogs_validators";
 import { titleValid, shortDescriptionValid, contentValid } from '../../middleware/posts_validators'
-import { isBlogCustomValid } from "../../middleware/blog_custom_validator";
 
-
-import { PostOutputModel, postQueryRepository } from "../../repositories/posts/query_repositories";
+import { PostOutputModel } from "../../repositories/posts/query_repositories";
 
 import { BlogOutputModel } from "./models/entity/blogOutputModel";
 import { PostInputModel } from "../posts/models/entity/postInputModel";

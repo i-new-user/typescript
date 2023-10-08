@@ -1,6 +1,6 @@
 import { blogsCollection } from './../../db';
 import { BlogMongoDBModel } from '../../features/blogs/models/entity/blogMongoDBModel';
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 
 export const blogsRepository = {

@@ -4,10 +4,8 @@ import { ObjectId, WithId } from "mongodb"
 
 import { BlogMongoDBModel } from "../../features/blogs/models/entity/blogMongoDBModel"
 import { BlogOutputModel } from "../../features/blogs/models/entity/blogOutputModel"
-import { PostOutputModel } from "../posts/query_repositories"
-import { PaginatorBlogModel } from "../../features/blogs/models/entity/blogPaginator"
 import { PostMongoDBModel } from "../../features/posts/models/entity/postMongoDBModel"
-
+import { PaginatorBlogModel } from "../../features/blogs/models/entity/blogPaginator"
 import { PaginatorPostModel } from "../../features/posts/models/entity/postPaginator"
 
 

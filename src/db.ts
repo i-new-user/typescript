@@ -1,10 +1,11 @@
 import { BlogMongoDBModel } from './features/blogs/models/entity/blogMongoDBModel'
 import { PostMongoDBModel } from './features/posts/models/entity/postMongoDBModel'
+import { UserMongoDBModel } from './features/users/models/entity/userMongoDBModel'
 
-//Эта строка импортирует классы MongoClient и ObjectId
+
 import { MongoClient, ObjectId } from 'mongodb'
 
-//Эта строка импортирует модуль dotenv
+
 import dotenv from 'dotenv'
 
 //Эта строка вызывает функцию config() из модуля dotenv, 
@@ -28,11 +29,13 @@ const client = new MongoClient(mongoURI)
 //коллекциями.
 const db = client.db('learning')
 
-// Эта строкb создают константы postsCollection и , которe представляют коллекции 
+// Эта строк создают константы postsCollection и , которe представляют коллекции 
 //MongoDB с именем 'posts'. Тип коллекции указывается как PostMongoDBModel, что
 // может быть определено в модели.
 export const blogsCollection = db.collection<BlogMongoDBModel>('blogs')
 export const postsCollection = db.collection<PostMongoDBModel>('posts')
+export const usersCollection = db.collection<UserMongoDBModel>('users')
+
 
 //Эта строка экспортирует асинхронную функцию runDb, которая содержит 
 //основную логику для подключения к серверу MongoDB.

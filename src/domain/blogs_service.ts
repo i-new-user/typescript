@@ -1,11 +1,8 @@
-import { blogsCollection, postsCollection } from './../db';
+import { blogsCollection } from './../db';
 import { blogsRepository } from '../repositories/blogs/command_repositories';
 
 import { BlogViewModel } from './../features/blogs/models/entity/blogViewModel';
 import { BlogMongoDBModel } from '../features/blogs/models/entity/blogMongoDBModel';
-import { PostMongoDBModel } from '../features/posts/models/entity/postMongoDBModel';
-import { PostOutputModel } from '../repositories/posts/query_repositories';
-import { blogsQueryRepository } from '../repositories/blogs/query_repositories';
 
 
 export const blogsService = {

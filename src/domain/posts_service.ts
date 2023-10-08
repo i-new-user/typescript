@@ -2,9 +2,8 @@ import { postsRepository } from '../repositories/posts/command_repositories';
 import { postsCollection } from '../db';
 
 import { PostViewModel } from "../features/posts/models/entity/postViewModel";
-import { PostModel } from '../features/posts/models/entity/postModel';
 import { PostMongoDBModel } from '../features/posts/models/entity/postMongoDBModel';
-import { ObjectId } from 'mongodb';
+
 
 
 
