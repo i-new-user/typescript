@@ -1,214 +1,255 @@
-import request from 'supertest'
-import { app, ROUTER_PATH } from '../../../app'
-import { HTTP_STATUSES } from '../../../http/statuses'
+import  request  from "supertest";
 
-import { BlogInputModel } from '../models/entity/blogInputModel'
+import { app, ROUTER_PATH } from "../../../app";
+import { HTTP_STATUSES } from "../../../http/statuses";
 
-import { blogTestManager } from './blog_test_manager'
+import { blogsCollection } from "../../../db";
 
+import { BlogInputType } from "../types/blogInputType";
+
+import { blogTestManager } from "./blogTestManager";
 
 
 //создает блок который группирует несколько связанных тестов
 describe('test for /blogs', () => {
     
-    //запускает функцию перед каждым тестом в этом файле
+
+     //запускает функцию перед каждым тестом в этом файле
     beforeAll( async () => {
-        await request(app).delete(ROUTER_PATH.test)
+       const p =  await request(app).delete(ROUTER_PATH.test)
     })
-
-
 
     it('should return 200 and empty array', async () => {
+
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
+
         await request(app)
             .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [])
+            .expect(HTTP_STATUSES.OK_200, {
+                                           "pagesCount": pagesCount,
+                                           "page": pageNumber,
+                                           "pageSize": pageSize,
+                                           "totalCount": totalDocuments,
+                                           "items": []
+                                        })
     })
-
 
     it('should return 404 for not existing entity', async () => {
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
+            .get(`${ROUTER_PATH.blogs}/65ce7e952060d0e34ae00000`)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
-
     it('should not create entity with incorrect input data', async () => {
 
-        const data: BlogInputModel = { 
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
+
+
+        const data: BlogInputType = { 
             name: '',
             description: 'description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         }
 
+        
         await blogTestManager.createBlog(data, HTTP_STATUSES.BAD_REQUEST_400)
-            
+
+
         await request(app)
             .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [])    
+            .expect(HTTP_STATUSES.OK_200, {
+                                        "pagesCount": pagesCount,
+                                        "page": pageNumber,
+                                        "pageSize": pageSize,
+                                        "totalCount": totalDocuments,
+                                        "items": []
+                                    })
     })
 
 
-    
-    let createBlog1: any = null
-    let createBlog2: any = null
+    let createdBlog1: any = null
+    let createdBlog2: any = null
 
-    it('should create entity1 with correct input data', async () => {
+    it('should create entety with correct input data', async () => {
 
-        const data: BlogInputModel = { 
+        const data: BlogInputType = {
             name: 'name',
             description: 'description',
-            websiteUrl: 'https://samurai.it-incubator.io/',
+            websiteUrl: 'https://samurai.it-incubator.io/'
         }
 
-        const { createEntity } = await blogTestManager.createBlog(data)
+        const {createdEntity}  = await blogTestManager.createBlog(data)
 
-        createBlog1 = createEntity
-        
+        createdBlog1 = createdEntity
+
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
 
         await request(app)
             .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [createBlog1])
-
+            .expect(HTTP_STATUSES.OK_200, {
+                                    "pagesCount": pagesCount,
+                                    "page": pageNumber,
+                                    "pageSize": pageSize,
+                                    "totalCount": totalDocuments,
+                                    "items": [createdBlog1]
+                                })
     })
-
 
     it('should create entity2 with correct input data', async () => {
 
-
-        const data: BlogInputModel = { 
+        const data: BlogInputType = { 
             name: 'name',
             description: 'description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         }
 
+        const {createdEntity}  = await blogTestManager.createBlog(data)
 
-        const { createEntity } = await blogTestManager.createBlog(data)
+        createdBlog2 = createdEntity
 
-        createBlog2 = createEntity
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
 
-            
         await request(app)
-            .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [createBlog1, createBlog2])   
-            
-    })
+                .get(ROUTER_PATH.blogs)
+                .expect(HTTP_STATUSES.OK_200, {
+                    "pagesCount": pagesCount,
+                    "page": pageNumber,
+                    "pageSize": pageSize,
+                    "totalCount": totalDocuments,
+                    "items": [createdBlog1, createdBlog2]
+                })
 
-  
+
+    })
+    
     it('should not update entity with incorrect input data', async () => {
 
-        const data: BlogInputModel = { 
-            name: 'name',
+        const data: BlogInputType = { 
+            name: 'update name',
             description: '',
             websiteUrl: 'https://samurai.it-incubator.io/'
-        }  
-
+        }
+        
+        await request(app)
+                    .put(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                    .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+                    .send( data )
+                    .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
-            .put(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send( data )
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
-         
-
-        await request(app)
-            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .expect(HTTP_STATUSES.OK_200, createBlog1)
-
+                    .get(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                    .expect(HTTP_STATUSES.OK_200, createdBlog1)
     })
-
 
     it('should not update entity that not exist', async () => {
 
-        await request(app)
-            .put(`${ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send(
-                { 
-                  name: 'name',
-                  description: 'description',
-                  websiteUrl: 'https://samurai.it-incubator.io/'
-                }
-            )
-            .expect(HTTP_STATUSES.NOT_FOUND_404)
-    })
-
-   
-
-    it('should  update entity with correct input data', async () => {
-
-        const data: BlogInputModel = { 
+        const data: BlogInputType = { 
             name: 'update name',
             description: 'update description',
             websiteUrl: 'https://samurai.it-incubator.io/'
         }
 
+        await request(app)
+                    .put(`${ROUTER_PATH.blogs}/650050e9e9e9659e4c3057cd`)
+                    .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+                    .send( data )
+                    .expect(HTTP_STATUSES.NOT_FOUND_404)
 
         await request(app)
-            .put(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .send( data )
-            .expect(HTTP_STATUSES.NO_CONTENT_204)
-
-
-
-        await request(app)
-            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .expect(HTTP_STATUSES.OK_200,
-                                {   ...createBlog1,
-                                    name: data.name,
-                                    description: data.description,
-                                    websiteUrl: data.websiteUrl
-                                }
-        )
-
-        await request(app)
-            .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [
-                {   ...createBlog1,
-                    name: data.name,
-                    description: data.description,
-                    websiteUrl: data.websiteUrl
-                }, 
-                createBlog2])
-
-      
-        
-        
-        await request(app)
-            .get(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
-            .expect(HTTP_STATUSES.OK_200, createBlog2)
-
+                    .get(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                    .expect(HTTP_STATUSES.OK_200, createdBlog1)
     })
-    
-    
-    
+
+    it('should update entity with correct input data', async () => {
+
+        const data: BlogInputType = { 
+            name: 'update name',
+            description: 'update description',
+            websiteUrl: 'https://samurai.it-incubator.io/'
+        }
+
+        await request(app)
+                    .put(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                    .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+                    .send( data )
+                    .expect(HTTP_STATUSES.NO_CONTENT_204)
+        
+        await request(app)
+                    .get(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                    .expect(HTTP_STATUSES.OK_200, {...createdBlog1,
+                                                   name: data.name,
+                                                   description: data.description,
+                                                   websiteUrl: data.websiteUrl,
+                                                })
+
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
+        
+        await request(app)
+                    .get(`${ROUTER_PATH.blogs}`)
+                    .expect(HTTP_STATUSES.OK_200, {"pagesCount": pagesCount,
+                                                   "page": pageNumber,
+                                                   "pageSize": pageSize,
+                                                   "totalCount": totalDocuments,
+                                                   "items": [{...createdBlog1,
+                                                              name: data.name,
+                                                              description: data.description,
+                                                              websiteUrl: data.websiteUrl,
+                                                             }, createdBlog2]
+                                                            })
+                        
+    })
+
     it('should delete both entityes', async () => {
-        await request(app)
-            .delete(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .expect(HTTP_STATUSES.NO_CONTENT_204)
-
 
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${createBlog1.id}`)
-            .expect(HTTP_STATUSES.NOT_FOUND_404)   
-            
-            
+                .delete(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+                .expect(HTTP_STATUSES.NO_CONTENT_204)
+        
         await request(app)
-            .delete(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
-            .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
-            .expect(HTTP_STATUSES.NO_CONTENT_204)    
-
+                .get(`${ROUTER_PATH.blogs}/${createdBlog1.id}`)
+                .expect(HTTP_STATUSES.NOT_FOUND_404)
 
         await request(app)
-            .get(`${ROUTER_PATH.blogs}/${createBlog2.id}`)
-            .expect(HTTP_STATUSES.NOT_FOUND_404) 
-
-           
+                .delete(`${ROUTER_PATH.blogs}/${createdBlog2.id}`)
+                .set('Authorization', `Basic ${'YWRtaW46cXdlcnR5'}`)
+                .expect(HTTP_STATUSES.NO_CONTENT_204)
+        
         await request(app)
-            .get(ROUTER_PATH.blogs)
-            .expect(HTTP_STATUSES.OK_200, [])     
+                .get(`${ROUTER_PATH.blogs}/${createdBlog2.id}`)
+                .expect(HTTP_STATUSES.NOT_FOUND_404)
+
+        const totalDocuments = await blogsCollection.countDocuments()
+        const pageSize = 10
+        const pagesCount = Math.ceil(totalDocuments/pageSize)
+        const pageNumber = 1
+
+        await request(app)
+                .get(ROUTER_PATH.blogs)
+                .expect(HTTP_STATUSES.OK_200, {"pagesCount": pagesCount,
+                                               "page": pageNumber,
+                                               "pageSize": pageSize,
+                                               "totalCount": totalDocuments,
+                                               "items": []})
     })
+
 
 
 })
+
+

@@ -1,15 +1,28 @@
 import { Request, Response, Router } from "express";
-import { blogsRepository } from "../repositories/blogs/command_repositories";
-import { postsRepository } from '../repositories/posts/command_repositories';
 import { HTTP_STATUSES } from "../http/statuses";
-import { usersCollection } from "../db";
+import { blogsCollection } from "../db";
 
 
-export const testingRouter = Router({})
+import { blogRepository } from "../repositories/blogs/command_repositories";
+import { postRepository } from "../repositories/posts/command_repository";
+import { usersRepository } from "../repositories/users/command_repository";
+import { commentsRepository } from "../repositories/comments/command_repository";
 
-testingRouter.delete('/', async (req: Request, res: Response) => {
-    await blogsRepository.deleteAllBlogs()
-    await postsRepository.deleteAllPost()
-    await usersCollection.deleteMany()
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+
+import { basicAuth } from "../middleware/basic_auth";
+
+
+export const testRouter = Router({})
+
+testRouter.delete('/', 
+
+    basicAuth,
+ 
+    async (req: Request, res: Response) => {
+
+    await blogRepository.deleteAllBlogs()
+    await postRepository.deleteAllPosts()
+    await usersRepository.deleteAllUsers()
+    await commentsRepository.deleteAllComments()
+    await res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

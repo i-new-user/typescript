@@ -1,60 +1,37 @@
-import { BlogMongoDBModel } from './features/blogs/models/entity/blogMongoDBModel'
-import { PostMongoDBModel } from './features/posts/models/entity/postMongoDBModel'
-import { UserMongoDBModel } from './features/users/models/entity/userMongoDBModel'
+import { MongoClient } from "mongodb";
 
+import { settings } from "./settings";
 
-import { MongoClient, ObjectId } from 'mongodb'
-
-
-import dotenv from 'dotenv'
-
-//Эта строка вызывает функцию config() из модуля dotenv, 
-//чтобы загрузить переменные среды из файла .env в процесс.
-dotenv.config()
+import { BlogMongoDBType } from "./features/blogs/types/blogMongoDBType";
+import { PostMongoDBType } from "./features/posts/types/postMongoDBType";
+import { UserMongoDBType } from "./features/users/types/userMongoDBType";
+import { CommentMongoDBType } from "./features/comments/types/commentatorMongoDBType";
 
 
 
-//Эта строка создает переменную mongoURI, которая содержит URL-адрес MongoDB, 
-//полученный из переменной среды MONGO_URL. Если значение переменной среды MONGO_URL 
-//не определено, будет использовано значение 'nongodb://0.0.0.0:27017'
-const mongoURI = process.env.MONGO_URL || 'nongodb://0.0.0.0:27017'
 
-//Эта строка создает новый экземпляр класса MongoClient с использованием mongoURI 
-//в качестве аргумента конструктора. MongoClient используется для подключения 
-//к серверу MongoDB.
-const client = new MongoClient(mongoURI)
+const mongoURL = settings.MONGO_URL
+const client = new MongoClient(mongoURL)
+const db = client.db('simple_data')
 
-//Эта строка создает переменную db, которая содержит базу данных MongoDB с именем 
-//'learning'. Эта база данных будет использоваться для выполнения операций с 
-//коллекциями.
-const db = client.db('learning')
-
-// Эта строк создают константы postsCollection и , которe представляют коллекции 
-//MongoDB с именем 'posts'. Тип коллекции указывается как PostMongoDBModel, что
-// может быть определено в модели.
-export const blogsCollection = db.collection<BlogMongoDBModel>('blogs')
-export const postsCollection = db.collection<PostMongoDBModel>('posts')
-export const usersCollection = db.collection<UserMongoDBModel>('users')
+export const blogsCollection = db.collection<BlogMongoDBType>('blogs')
+export const postsCollection = db.collection<PostMongoDBType>('posts')
+export const usersCollection = db.collection<UserMongoDBType>('users')
+export const commentsCollection = db.collection<CommentMongoDBType>('comments')
 
 
-//Эта строка экспортирует асинхронную функцию runDb, которая содержит 
-//основную логику для подключения к серверу MongoDB.
 export const runDb = async () => {
-    try{
-        // console.log(process.env.MONGO_URL)
+   try{
 
-        //Эта строка асинхронно подключается к серверу MongoDB 
-        //с использованием созданного клиента client
-        await client.connect()
-        console.log('Connected successfully to server')
+    await client.connect()
+    console.log(`Connected successfully to server'`)
 
-    } catch(e) {
+   } catch(e){
+    
+    console.log(`Dont connected successfully to server`)
+    await client.close()
 
-        console.log('Dont connected successfully to server')
-
-        // Эта строка асинхронно закрывает соединение с сервером MongoDB
-        await client.close()
-
-    }
+   }
 }
+
 

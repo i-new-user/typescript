@@ -9,14 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testingRouter = void 0;
+exports.testRouter = void 0;
 const express_1 = require("express");
-const command_repositories_1 = require("../repositories/blogs/command_repositories");
-const command_repositories_2 = require("../repositories/posts/command_repositories");
 const statuses_1 = require("../http/statuses");
-exports.testingRouter = (0, express_1.Router)({});
-exports.testingRouter.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield command_repositories_1.blogsRepository.deleteAllBlogs();
-    yield command_repositories_2.postsRepository.deleteAllPost();
-    res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+const command_repositories_1 = require("../repositories/blogs/command_repositories");
+const command_repository_1 = require("../repositories/posts/command_repository");
+const command_repository_2 = require("../repositories/users/command_repository");
+const command_repository_3 = require("../repositories/comments/command_repository");
+const basic_auth_1 = require("../middleware/basic_auth");
+exports.testRouter = (0, express_1.Router)({});
+exports.testRouter.delete('/', basic_auth_1.basicAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield command_repositories_1.blogRepository.deleteAllBlogs();
+    yield command_repository_1.postRepository.deleteAllPosts();
+    yield command_repository_2.usersRepository.deleteAllUsers();
+    yield command_repository_3.commentsRepository.deleteAllComments();
+    yield res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 }));
