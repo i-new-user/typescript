@@ -1,12 +1,14 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { HTTP_STATUSES } from "../http/statuses";
 
 import { jwtService } from "../application/jwtService";
 
 import { usersQueryRepository } from "../repositories/users/query_repository";
 
+import { RequestCustomForAuthMiddleware } from './../types/reqCustForAuthMiddleware';
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+
+export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: Response, next: NextFunction) => {
     console.log(req.headers.authorization)
     if(!req.headers.authorization){
        
