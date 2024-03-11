@@ -40,7 +40,7 @@ authRouter.get('/me',
 
 authRouter.post('/login', 
 
-    LoginOrEmailValid, passwordValid, authMiddleware,
+    LoginOrEmailValid, passwordValid,
     
     async (req: Request, res: Response) => {
 

@@ -13,7 +13,7 @@ import { testRouter } from './features/testing_routers'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
-import jwt from 'jsonwebtoken'
+
 
 export const app = express()
 
@@ -54,32 +54,5 @@ app.use( ROUTER_PATH.test, testRouter)
 
 
 app.get('/', (req: Request, res: Response) => {
-
-
-    const t1 = jwt.sign({ foo: 'bar' }, 'shhhhh');
-    console.log(t1)
-
-    const t2 = jwt.sign(
-    {
-        data: 'foobar'
-    },
-    'secret', 
-    {
-        expiresIn: '1h'
-    })
-
-    console.log(t2)
-
-    const decode = jwt.decode(t2, {complete: true})
-    console.log(decode!.header)
-    console.log(decode?.payload)
-    
-   
-
-   
-
-    
-
-
     res.send('Hello World !!!')
 })

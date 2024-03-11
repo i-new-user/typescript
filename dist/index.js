@@ -12,9 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("./app");
 const db_1 = require("./db");
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app_1.app.listen(3001, () => {
-        console.log(`Example app listening on port ${3000}`);
-    });
+    try {
+        yield (0, db_1.runDb)();
+        app_1.app.listen(3000, () => {
+            console.log(`Example app listening on port ${3000}`);
+        });
+    }
+    catch (e) {
+        console.log(`error ${e}`);
+    }
 });
 start();
