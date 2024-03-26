@@ -1,11 +1,15 @@
 import { app } from "./app";
 import { runDb } from "./db";
 
+import dotenv from 'dotenv'
+dotenv.config()
+
+
 const start = async () => {
   try{
     await runDb()
-    app.listen(3000, () => {
-        console.log(`Example app listening on port ${3000}`)
+    app.listen(process.env.PORT, () => {
+        console.log(`Example app listening on port ${process.env.PORT}`)
     })
   } catch(e){
     console.log(`error ${e}`)

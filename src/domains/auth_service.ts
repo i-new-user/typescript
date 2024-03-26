@@ -18,7 +18,6 @@ export const authService = {
 
         const passwordHash = await this.generateHash(password, user.passwordSalt)
        
-        console.log(passwordHash, user.passwordHash )
         if(user.passwordHash !== passwordHash){
 
             return null

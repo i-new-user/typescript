@@ -39,9 +39,10 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .get('/blogId/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e, _f, _g;
     const isBlog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(req.params.id);
+    console.log(isBlog);
     if (!isBlog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -62,7 +63,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const blog = yield blogs_service_1.blogService.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(blog);
 }))
-    .post('/blogId/posts', basic_auth_1.basicAuth, posts_validator_1.titleValid, posts_validator_1.shortDescriptionValid, posts_validator_1.contentValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .post('/:id/posts', basic_auth_1.basicAuth, posts_validator_1.titleValid, posts_validator_1.shortDescriptionValid, posts_validator_1.contentValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const blogId = req.params.id;
     const { title, shortDescription, content } = req.body;
     const blog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(blogId);

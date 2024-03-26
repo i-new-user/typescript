@@ -58,10 +58,10 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 })
 
 
-.get('/blogId/posts', async (req: Request, res: Response<PaginatorPostType>) => {
+.get('/:id/posts', async (req: Request, res: Response<PaginatorPostType>) => {
 
   const isBlog: BlogViewType | null = await blogsQueryRepositoty.findBlogById(req.params.id)
-
+console.log(isBlog)
   if(!isBlog){
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
@@ -94,7 +94,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 })
 
 
-.post('/blogId/posts', 
+.post('/:id/posts', 
 
   basicAuth, titleValid, shortDescriptionValid, contentValid, inputValidation,
   
