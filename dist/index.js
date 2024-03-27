@@ -19,7 +19,7 @@ dotenv_1.default.config();
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.runDb)();
-        app_1.app.listen(process.env.PORT, () => {
+        app_1.app.listen(process.env.PORT || 3001, () => {
             console.log(`Example app listening on port ${process.env.PORT}`);
         });
     }
