@@ -11,6 +11,7 @@ import { CommentMongoDBType } from "./features/comments/types/commentatorMongoDB
 
 
 const mongoURL = settings.MONGO_URL
+console.log(mongoURL)
 const client = new MongoClient(mongoURL)
 const db = client.db('simple_data')
 

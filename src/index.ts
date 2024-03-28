@@ -13,7 +13,7 @@ const start = async () => {
     })
   } catch(e){
     console.log(`error ${e}`)
-  }
+  } 
 }
 
 start()
