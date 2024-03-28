@@ -16,7 +16,7 @@ export const testRouter = Router({})
 
 testRouter.delete('/', 
 
-    basicAuth,
+ 
  
     async (req: Request, res: Response) => {
 
