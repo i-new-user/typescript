@@ -42,6 +42,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e, _f, _g;
     const isBlog = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
+    console.log(isBlog === null || isBlog === void 0 ? void 0 : isBlog.id);
     if (!isBlog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -50,8 +51,8 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
     const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
     const posts = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize);
+    console.log(req.params.id);
     if (posts) {
-        console.log(posts);
         res.send(posts);
     }
     else {

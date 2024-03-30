@@ -61,7 +61,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 .get('/:id/posts', async (req: Request, res: Response<PaginatorPostType>) => {
 
   const isBlog: BlogViewType | null = await blogsQueryRepository.findBlogById(req.params.id)
-
+  console.log(isBlog?.id)
   if(!isBlog){
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
@@ -72,8 +72,8 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
   const pageSize = req.query.pageSize as string ?? '10'
 
   const posts: PaginatorPostType = await blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize)
+  console.log(req.params.id)
   if(posts){
-    console.log(posts)
     res.send(posts)
   } else {
     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
