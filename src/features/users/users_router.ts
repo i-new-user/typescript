@@ -72,6 +72,9 @@ usersRouter.get('/', async (req: Request, res: Response<PaginatorUserType>) => {
 
     const isDeleted = await userService.deleteUser(req.params.id)
 
+    console.log('router')
+    console.log(req.params.id)
+
     if(isDeleted){
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     } else {

@@ -17,10 +17,9 @@ export const postQueryRepository = {
 
     async findPosts(searchNameTerm: string | null,  sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
 
-        const totalDocuments = await postsCollection.countDocuments( {})
+        const totalDocuments = await postsCollection.countDocuments( {name: {$regex: searchNameTerm ?? '', $options: 'i'}})
 
         const posts: WithId<PostMongoDBType>[] | [] = await postsCollection.find({})
-
                                                                             .sort({[sortBy]: sortDirection})
                                                                             .skip((+pageNumber - 1) * +pageSize)
                                                                             .limit(+pageSize)

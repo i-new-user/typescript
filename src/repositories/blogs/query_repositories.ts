@@ -67,7 +67,7 @@ export const blogsQueryRepositoty = {
     }, 
 
 
-    async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
+    async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: -1 | 1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
         
         const totalDocuments = await blogsCollection.countDocuments({blogId: id})
         
