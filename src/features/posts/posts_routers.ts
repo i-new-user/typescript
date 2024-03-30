@@ -40,7 +40,7 @@ export const postsRouter = Router({})
 postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
     const sortBy = req.query.sortBy as string ?? "createdAt"
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1
     const pageNumber = req.query.pageNumber as string ?? '1'
     const pageSize = req.query.pageSize as string ?? '10'
 
@@ -123,7 +123,7 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
      }
 
     const sortBy = req.query.sortBy as string ?? "createdAt"
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1
     const pageNumber = req.query.pageNumber as string ?? '1'
     const pageSize = req.query.pageSize as string ?? '10'
 

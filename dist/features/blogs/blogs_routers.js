@@ -24,7 +24,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     var _a, _b, _c, _d;
     const searchNameTerm = (_a = req.query.searchNameTerm) !== null && _a !== void 0 ? _a : null;
     const sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
     const pageNumber = (_c = req.query.pageNumber) !== null && _c !== void 0 ? _c : '1';
     const pageSize = (_d = req.query.pageSize) !== null && _d !== void 0 ? _d : '10';
     const blogs = yield query_repositories_1.blogsQueryRepository.findBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
@@ -47,7 +47,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
     const sortBy = (_e = req.query.sortBy) !== null && _e !== void 0 ? _e : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
     const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
     const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
     const posts = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize);

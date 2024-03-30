@@ -24,7 +24,7 @@ exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
     const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
     const pageNumber = (_b = req.query.pageNumber) !== null && _b !== void 0 ? _b : '1';
     const pageSize = (_c = req.query.pageSize) !== null && _c !== void 0 ? _c : '10';
     const posts = yield query_repository_1.postQueryRepository.findPosts(sortBy, sortDirection, pageNumber, pageSize);
@@ -75,7 +75,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
     const sortBy = (_d = req.query.sortBy) !== null && _d !== void 0 ? _d : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
     const pageNumber = (_e = req.query.pageNumber) !== null && _e !== void 0 ? _e : '1';
     const pageSize = (_f = req.query.pageSize) !== null && _f !== void 0 ? _f : '10';
     const comments = yield query_repository_1.postQueryRepository.findPostByIdComments(id, sortBy, sortDirection, pageNumber, pageSize);

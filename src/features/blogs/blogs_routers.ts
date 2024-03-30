@@ -39,7 +39,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 
   const searchNameTerm = req.query.searchNameTerm as string ?? null
   const sortBy = req.query.sortBy as string ?? "createdAt"
-  const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
+  const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
 
@@ -67,7 +67,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
   }
 
   const sortBy = req.query.sortBy as string ?? "createdAt"
-  const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
+  const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
 
