@@ -50,6 +50,10 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
     const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
     const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
+    console.log(sortBy);
+    console.log(sortDirection);
+    console.log(pageNumber);
+    console.log(pageSize);
     const posts = yield query_repositories_1.blogsQueryRepositoty.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize);
     if (posts) {
         res.send(posts);

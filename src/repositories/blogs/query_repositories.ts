@@ -67,15 +67,21 @@ export const blogsQueryRepositoty = {
     }, 
 
 
-    async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: -1 | 1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
+    async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
         
-        const totalDocuments = await blogsCollection.countDocuments({blogId: id})
+        const totalDocuments = await blogsCollection.countDocuments({})
         
         const posts: WithId<PostMongoDBType>[] | [] =   await postsCollection.find({blogId: id})
                                                                            .sort({[sortBy]: sortDirection})
                                                                            .skip((+pageNumber - 1) * +pageSize)
                                                                            .limit(+pageSize)
                                                                            .toArray()
+                                                              
+                                                                           console.log(posts)
+                                                                           console.log(totalDocuments)
+                                                                           console.log(pageNumber)
+                                                                           console.log(pageSize)
+
 
         return this._mapPostOutputModel(posts, totalDocuments, +pageNumber, +pageSize)
     }, 

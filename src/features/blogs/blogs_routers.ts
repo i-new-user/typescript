@@ -70,6 +70,11 @@ console.log(isBlog)
   const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
+  
+  console.log(sortBy)
+  console.log(sortDirection)
+  console.log(pageNumber)
+  console.log(pageSize)
 
   const posts: PaginatorPostType = await blogsQueryRepositoty.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize)
   if(posts){
