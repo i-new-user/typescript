@@ -26,14 +26,18 @@ import { inputValidation } from "../../middleware/input_validator";
 export const usersRouter = Router({})
 
 
-usersRouter.get('/', basicAuth, async (req: Request, res: Response<PaginatorUserType>) => {
+usersRouter.get('/',  async (req: Request, res: Response<PaginatorUserType>) => {
 
-    const sortBy = req.params.sortBy as string ?? 'createdAt'
-    const sortDirection = req.params.sortDirection === 'desc' ? 1 : -1
-    const pageNumber = req.params.pageNumber as string ?? '1'
-    const pageSize = req.params.pageSize as string ?? '10'
-    const searchLoginTerm = req.params.searchLoginTerm as string ?? null
-    const searchEmailTerm = req.params.searchEmailTerm as string ?? null
+    const sortBy = req.query.sortBy as string ?? 'createdAt'
+    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
+    const pageNumber = req.query.pageNumber as string ?? '1'
+    const pageSize = req.query.pageSize as string ?? '10'
+    const searchLoginTerm = req.query.searchLoginTerm as string ?? null
+    const searchEmailTerm = req.query.searchEmailTerm as string ?? null   
+
+    console.log(searchLoginTerm)
+    console.log(searchEmailTerm)
+
 
     const users: PaginatorUserType = await usersQueryRepository.findUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     res.send(users)
@@ -72,8 +76,7 @@ usersRouter.get('/', basicAuth, async (req: Request, res: Response<PaginatorUser
 
     const isDeleted = await userService.deleteUser(req.params.id)
 
-    console.log('router')
-    console.log(req.params.id)
+ 
 
     if(isDeleted){
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)

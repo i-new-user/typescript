@@ -18,15 +18,17 @@ export const usersQueryRepository = {
             {login: {$regex: searchLoginTerm ?? '', $options: 'i' }},
             {email: {$regex: searchEmailTerm ?? '', $options: 'i' }}
             ] }
-
+ 
         const totalDocuments = await usersCollection.countDocuments(filter)
-        
+       
+      
+
         const users: WithId<UserMongoDBType>[] | [] = await usersCollection.find( filter )
                                                                             .sort({[sortBy]: sortDirection})
                                                                             .skip((+pageNumber-1) * +pageSize)
                                                                             .limit(+pageSize)
                                                                             .toArray()
-
+                                                                          
         return this._mapUserOutputModel(users, totalDocuments, +pageNumber, +pageSize)
 
     },
@@ -43,6 +45,7 @@ export const usersQueryRepository = {
                 email: user.email,
                 createdAt: user.createdAt
             })) 
+            
         }
     },
 
