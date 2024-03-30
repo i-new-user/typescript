@@ -14,6 +14,7 @@ import { UriParamsComments } from "./models/uriParamsComments";
 import { CommentInputType } from "./types/commentInputType";
 import { CommentOutputType } from "./types/commentatorOutputType";
 import { CommentViewType } from "./types/commentatorViewType";
+import { conmmentValid } from "../../middleware/comments_valid";
 
 
 import { basicAuth } from "../../middleware/basic_auth";
@@ -34,7 +35,7 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
 })
 
 
-.put('/:id', authMiddleware, async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
+.put('/:id', authMiddleware, conmmentValid, async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
 
     const id = req.params.id
     const {content} = req.body
