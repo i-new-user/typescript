@@ -34,10 +34,7 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
 })
 
 
-.put('/:id', 
-
-
-    async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
+.put('/:id', authMiddleware, async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
 
     const id = req.params.id
     const {content} = req.body
@@ -50,7 +47,7 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
     }
 })
 
-.delete('/:id', basicAuth, async (req: RequestWithParams<UriParamsComments>, res: Response) => {
+.delete('/:id', authMiddleware, async (req: RequestWithParams<UriParamsComments>, res: Response) => {
     const isDeleted = await commentsRepository.deleteComment(req.params.id)
     if(isDeleted){
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)

@@ -26,10 +26,10 @@ import { inputValidation } from "../../middleware/input_validator";
 export const usersRouter = Router({})
 
 
-usersRouter.get('/', async (req: Request, res: Response<PaginatorUserType>) => {
+usersRouter.get('/', basicAuth, async (req: Request, res: Response<PaginatorUserType>) => {
 
     const sortBy = req.params.sortBy as string ?? 'createdAt'
-    const sortDirection = req.params.sortDirection === 'asc' ? -1 : 1
+    const sortDirection = req.params.sortDirection === 'desc' ? 1 : -1
     const pageNumber = req.params.pageNumber as string ?? '1'
     const pageSize = req.params.pageSize as string ?? '10'
     const searchLoginTerm = req.params.searchLoginTerm as string ?? null

@@ -22,13 +22,12 @@ const blog_custom_valid_1 = require("../../middleware/blog_custom_valid");
 const posts_validator_1 = require("../../middleware/posts_validator");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
-    const searchNameTerm = (_a = req.query.searchNameTerm) !== null && _a !== void 0 ? _a : null;
-    const sortBy = (_b = req.query.sortBy) !== null && _b !== void 0 ? _b : "createdAt";
-    const sortDirection = req.query.sortDirection === 'asc' ? -1 : 1;
-    const pageNumber = (_c = req.query.pageNumber) !== null && _c !== void 0 ? _c : '1';
-    const pageSize = (_d = req.query.pageSize) !== null && _d !== void 0 ? _d : '10';
-    const posts = yield query_repository_1.postQueryRepository.findPosts(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
+    var _a, _b, _c;
+    const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
+    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const pageNumber = (_b = req.query.pageNumber) !== null && _b !== void 0 ? _b : '1';
+    const pageSize = (_c = req.query.pageSize) !== null && _c !== void 0 ? _c : '10';
+    const posts = yield query_repository_1.postQueryRepository.findPosts(sortBy, sortDirection, pageNumber, pageSize);
     res.send(posts);
 }))
     .get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,7 +41,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
 }))
     .post('/', basic_auth_1.basicAuth, posts_validator_1.titleValid, posts_validator_1.shortDescriptionValid, posts_validator_1.contentValid, posts_validator_1.blogIdValid, blog_custom_valid_1.isBlogCustomValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, shortDescription, content, blogId } = req.body;
-    const blog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(blogId);
+    const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
     if (!blog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -69,16 +68,16 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }))
     .get('/:id/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e, _f, _g;
+    var _d, _e, _f;
     const id = req.params.id;
     const post = yield query_repository_1.postQueryRepository.findPostById(id);
     if (!post) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
-    const sortBy = (_e = req.query.sortBy) !== null && _e !== void 0 ? _e : "createdAt";
-    const sortDirection = req.query.sortDirection === 'asc' ? -1 : 1;
-    const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
-    const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
+    const sortBy = (_d = req.query.sortBy) !== null && _d !== void 0 ? _d : "createdAt";
+    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
+    const pageNumber = (_e = req.query.pageNumber) !== null && _e !== void 0 ? _e : '1';
+    const pageSize = (_f = req.query.pageSize) !== null && _f !== void 0 ? _f : '10';
     const comments = yield query_repository_1.postQueryRepository.findPostByIdComments(id, sortBy, sortDirection, pageNumber, pageSize);
     if (comments) {
         res.send(comments);

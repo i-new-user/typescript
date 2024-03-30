@@ -10,7 +10,7 @@ import { UriParamsBlog } from "./models/uriParamsBlog";
 
 
 import { blogService } from "../../domains/blogs_service";
-import { blogsQueryRepositoty } from "../../repositories/blogs/query_repositories";
+import { blogsQueryRepository } from "../../repositories/blogs/query_repositories";
 
 import { PaginatorBlogType } from "./types/paginatorBlogType";
 import { BlogInputType } from "./types/blogInputType";
@@ -43,13 +43,13 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
 
-  const blogs: PaginatorBlogType = await blogsQueryRepositoty.findBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+  const blogs: PaginatorBlogType = await blogsQueryRepository.findBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
   res.send(blogs)
 
 })
 
 .get('/:id', async (req: RequestWithParams<UriParamsBlog>, res: Response) => {
-  const blog = await blogsQueryRepositoty.findBlogById(req.params.id)
+  const blog = await blogsQueryRepository.findBlogById(req.params.id)
   if(blog){
     res.send(blog)
   } else {
@@ -60,8 +60,8 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 
 .get('/:id/posts', async (req: Request, res: Response<PaginatorPostType>) => {
 
-  const isBlog: BlogViewType | null = await blogsQueryRepositoty.findBlogById(req.params.id)
-console.log(isBlog)
+  const isBlog: BlogViewType | null = await blogsQueryRepository.findBlogById(req.params.id)
+
   if(!isBlog){
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
@@ -70,14 +70,10 @@ console.log(isBlog)
   const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
   const pageNumber = req.query.pageNumber as string ?? '1'
   const pageSize = req.query.pageSize as string ?? '10'
-  
-  console.log(sortBy)
-  console.log(sortDirection)
-  console.log(pageNumber)
-  console.log(pageSize)
 
-  const posts: PaginatorPostType = await blogsQueryRepositoty.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize)
+  const posts: PaginatorPostType = await blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize)
   if(posts){
+    console.log(posts)
     res.send(posts)
   } else {
     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -109,7 +105,7 @@ console.log(isBlog)
 
   const {title, shortDescription, content} = req.body
 
-  const blog: BlogViewType | null = await blogsQueryRepositoty.findBlogById(blogId)
+  const blog: BlogViewType | null = await blogsQueryRepository.findBlogById(blogId)
   if(!blog){
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }

@@ -18,13 +18,10 @@ import { PostInputType } from "./types/postInputType";
 import { PostOutputType } from "./types/postOutputType";
 
 
-import { blogsQueryRepositoty } from '../../repositories/blogs/query_repositories';
+import { blogsQueryRepository } from '../../repositories/blogs/query_repositories';
 
 
 import { PaginatorCommentType } from './../comments/types/paginatorCommentType';
-
-
-import { usersQueryRepository } from "../../repositories/users/query_repository";
 
 
 import { CommentInputType } from "../comments/types/commentInputType";
@@ -42,13 +39,12 @@ export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
-    const searchNameTerm = req.query.searchNameTerm as string ?? null
     const sortBy = req.query.sortBy as string ?? "createdAt"
-    const sortDirection = req.query.sortDirection === 'asc' ? -1 : 1
+    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
     const pageNumber = req.query.pageNumber as string ?? '1'
     const pageSize = req.query.pageSize as string ?? '10'
 
-    const posts: PaginatorPostType = await postQueryRepository.findPosts(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+    const posts: PaginatorPostType = await postQueryRepository.findPosts(sortBy, sortDirection, pageNumber, pageSize)
     res.send(posts)
 })
 
@@ -70,7 +66,8 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
     const {title, shortDescription, content, blogId} = req.body
 
-    const blog = await blogsQueryRepositoty.findBlogById(blogId)
+    const blog = await blogsQueryRepository.findBlogById(blogId)
+
     if(!blog){
         return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     }
@@ -116,15 +113,17 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
 
 .get('/:id/comments', async (req: Request, res: Response<PaginatorCommentType>) => {
-
+   
     const id = req.params.id
+   
     const post = await postQueryRepository.findPostById(id)
+   
     if(!post){
         return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
      }
 
     const sortBy = req.query.sortBy as string ?? "createdAt"
-    const sortDirection = req.query.sortDirection === 'asc' ? -1 : 1
+    const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1
     const pageNumber = req.query.pageNumber as string ?? '1'
     const pageSize = req.query.pageSize as string ?? '10'
 

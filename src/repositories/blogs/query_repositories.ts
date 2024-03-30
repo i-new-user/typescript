@@ -16,7 +16,7 @@ import { ObjectId, WithId } from "mongodb";
 
 
 
-export const blogsQueryRepositoty = {
+export const blogsQueryRepository = {
 
     async findBlogs(searchNameTerm: string | null,  sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorBlogType> {
         
@@ -69,18 +69,14 @@ export const blogsQueryRepositoty = {
 
     async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
         
-        const totalDocuments = await blogsCollection.countDocuments({})
+        const totalDocuments = await postsCollection.countDocuments({blogId: id})
+       
         
-        const posts: WithId<PostMongoDBType>[] | [] =   await postsCollection.find({blogId: id})
+        const posts: WithId<PostMongoDBType>[] | [] =   await postsCollection.find({})
                                                                            .sort({[sortBy]: sortDirection})
                                                                            .skip((+pageNumber - 1) * +pageSize)
                                                                            .limit(+pageSize)
                                                                            .toArray()
-                                                              
-                                                                           console.log(posts)
-                                                                           console.log(totalDocuments)
-                                                                           console.log(pageNumber)
-                                                                           console.log(pageSize)
 
 
         return this._mapPostOutputModel(posts, totalDocuments, +pageNumber, +pageSize)

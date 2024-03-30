@@ -27,11 +27,11 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
     const pageNumber = (_c = req.query.pageNumber) !== null && _c !== void 0 ? _c : '1';
     const pageSize = (_d = req.query.pageSize) !== null && _d !== void 0 ? _d : '10';
-    const blogs = yield query_repositories_1.blogsQueryRepositoty.findBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
+    const blogs = yield query_repositories_1.blogsQueryRepository.findBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize);
     res.send(blogs);
 }))
     .get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const blog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(req.params.id);
+    const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
     if (blog) {
         res.send(blog);
     }
@@ -41,8 +41,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
 }))
     .get('/:id/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _e, _f, _g;
-    const isBlog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(req.params.id);
-    console.log(isBlog);
+    const isBlog = yield query_repositories_1.blogsQueryRepository.findBlogById(req.params.id);
     if (!isBlog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -50,12 +49,9 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortDirection = req.query.sortDirection === 'desc' ? 1 : -1;
     const pageNumber = (_f = req.query.pageNumber) !== null && _f !== void 0 ? _f : '1';
     const pageSize = (_g = req.query.pageSize) !== null && _g !== void 0 ? _g : '10';
-    console.log(sortBy);
-    console.log(sortDirection);
-    console.log(pageNumber);
-    console.log(pageSize);
-    const posts = yield query_repositories_1.blogsQueryRepositoty.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize);
+    const posts = yield query_repositories_1.blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize);
     if (posts) {
+        console.log(posts);
         res.send(posts);
     }
     else {
@@ -70,7 +66,7 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     .post('/:id/posts', basic_auth_1.basicAuth, posts_validator_1.titleValid, posts_validator_1.shortDescriptionValid, posts_validator_1.contentValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const blogId = req.params.id;
     const { title, shortDescription, content } = req.body;
-    const blog = yield query_repositories_1.blogsQueryRepositoty.findBlogById(blogId);
+    const blog = yield query_repositories_1.blogsQueryRepository.findBlogById(blogId);
     if (!blog) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
