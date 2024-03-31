@@ -24,7 +24,7 @@ exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
     const sortBy = (_a = req.query.sortBy) !== null && _a !== void 0 ? _a : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
+    const sortDirection = req.query.sortDirection === undefined ? 'desc' : 'asc';
     const pageNumber = (_b = req.query.pageNumber) !== null && _b !== void 0 ? _b : '1';
     const pageSize = (_c = req.query.pageSize) !== null && _c !== void 0 ? _c : '10';
     const posts = yield query_repository_1.postQueryRepository.findPosts(sortBy, sortDirection, pageNumber, pageSize);

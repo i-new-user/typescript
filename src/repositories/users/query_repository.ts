@@ -12,7 +12,7 @@ import { UserViewType } from "../../features/users/types/userViewType"
 
 export const usersQueryRepository = {
 
-    async findUsers(sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string, searchLoginTerm: string | null, searchEmailTerm: string | null){
+    async findUsers(sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string, searchLoginTerm: string | null, searchEmailTerm: string | null){
         
         const filter = {$or: [
             {login: {$regex: searchLoginTerm ?? '', $options: 'i' }},

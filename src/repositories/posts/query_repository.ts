@@ -15,7 +15,7 @@ import { CommentMongoDBType } from '../../features/comments/types/commentatorMon
 
 export const postQueryRepository = {
 
-    async findPosts(sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
+    async findPosts(sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
 
         const totalDocuments = await postsCollection.countDocuments({})
 
@@ -66,7 +66,7 @@ export const postQueryRepository = {
         }
     },
 
-    async findPostByIdComments(id: string, sortBy: string, sortDirection: 1 | -1, pageNumber: string, pageSize: string): Promise<PaginatorCommentType>{
+    async findPostByIdComments(id: string, sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string): Promise<PaginatorCommentType>{
         
         const totalDocuments = await commentsCollection.countDocuments({})
 
