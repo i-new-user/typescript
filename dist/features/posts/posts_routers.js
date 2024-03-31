@@ -75,7 +75,7 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
     const sortBy = (_d = req.query.sortBy) !== null && _d !== void 0 ? _d : "createdAt";
-    const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
+    const sortDirection = req.query.sortDirection === undefined ? 'desc' : 'asc';
     const pageNumber = (_e = req.query.pageNumber) !== null && _e !== void 0 ? _e : '1';
     const pageSize = (_f = req.query.pageSize) !== null && _f !== void 0 ? _f : '10';
     const comments = yield query_repository_1.postQueryRepository.findPostByIdComments(id, sortBy, sortDirection, pageNumber, pageSize);
