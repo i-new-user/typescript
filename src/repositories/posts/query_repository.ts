@@ -66,10 +66,10 @@ export const postQueryRepository = {
         }
     },
 
-    async findPostByIdComments(id: string, sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string): Promise<PaginatorCommentType>{
+    async findCommentsByPostId(postId: string, sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string): Promise<PaginatorCommentType>{
         
         const totalDocuments = await commentsCollection.countDocuments({})
-
+        console.log(totalDocuments)
         const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({})
                                                                                 .sort({[sortBy]: sortDirection})
                                                                                 .skip((+pageNumber - 1) * +pageSize)
@@ -93,29 +93,29 @@ export const postQueryRepository = {
                   userId: comment.commentatorInfo.userId,
                   userLogin: comment.commentatorInfo.userLogin,
                 },
-                createdAt: new Date().toISOString()
+                createdAt: comment.createdAt
             })) 
         }
     },
 
-    async findPostByIdComment(id: string): Promise<CommentOutputType | null>{
+    // async findPostByIdComment(id: string): Promise<CommentOutputType | null>{
 
-        const comment: WithId<CommentMongoDBType> | null= await commentsCollection.findOne( {_id: new ObjectId(id)} )
+    //     const comment: WithId<CommentMongoDBType> | null= await commentsCollection.findOne( {_id: new ObjectId(id)} )
         
-        if(comment){
-            return{
-                id: String(comment._id),
-                content: comment.content,
-                commentatorInfo: {
-                userId: comment.commentatorInfo.userId,
-                userLogin: comment.commentatorInfo.userLogin
-                },
-                createdAt: comment.createdAt
-            }
-        } else {
-            return null
-        }
-    },
+    //     if(comment){
+    //         return{
+    //             id: String(comment._id),
+    //             content: comment.content,
+    //             commentatorInfo: {
+    //             userId: comment.commentatorInfo.userId,
+    //             userLogin: comment.commentatorInfo.userLogin
+    //             },
+    //             createdAt: comment.createdAt
+    //         }
+    //     } else {
+    //         return null
+    //     }
+    // },
 
 
 

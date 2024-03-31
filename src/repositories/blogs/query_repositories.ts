@@ -72,8 +72,7 @@ export const blogsQueryRepository = {
     async findBlogByIdPosts(id: string,  sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string ): Promise<PaginatorPostType> {
         
         const totalDocuments = await postsCollection.countDocuments({blogId: id})
-       console.log(totalDocuments)
-       console.log({blogId: id})
+       
         
         const posts: WithId<PostMongoDBType>[] | [] =   await postsCollection.find({blogId: id})
                                                                            .sort({[sortBy]: sortDirection})

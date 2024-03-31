@@ -15,6 +15,7 @@ const statuses_1 = require("../../http/statuses");
 const posts_service_1 = require("../../domains/posts_service");
 const query_repository_1 = require("../../repositories/posts/query_repository");
 const query_repositories_1 = require("../../repositories/blogs/query_repositories");
+const comments_valid_1 = require("../../middleware/comments_valid");
 const authMiddleware_1 = require("../../middleware/authMiddleware");
 const basic_auth_1 = require("../../middleware/basic_auth");
 const input_validator_1 = require("../../middleware/input_validator");
@@ -69,8 +70,10 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
 }))
     .get('/:id/comments', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _d, _e, _f;
-    const id = req.params.id;
-    const post = yield query_repository_1.postQueryRepository.findPostById(id);
+    const postId = req.params.id;
+    console.log(postId);
+    const post = yield query_repository_1.postQueryRepository.findPostById(postId);
+    console.log(post);
     if (!post) {
         return res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -78,7 +81,9 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const sortDirection = req.query.sortDirection === undefined ? 'desc' : 'asc';
     const pageNumber = (_e = req.query.pageNumber) !== null && _e !== void 0 ? _e : '1';
     const pageSize = (_f = req.query.pageSize) !== null && _f !== void 0 ? _f : '10';
-    const comments = yield query_repository_1.postQueryRepository.findPostByIdComments(id, sortBy, sortDirection, pageNumber, pageSize);
+    const comments = yield query_repository_1.postQueryRepository.findCommentsByPostId(postId, sortBy, sortDirection, pageNumber, pageSize);
+    console.log(postId);
+    console.log(comments);
     if (comments) {
         res.send(comments);
     }
@@ -86,8 +91,10 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .post('/:id/comments', posts_validator_1.contentValid, authMiddleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    .post('/:id/comments', authMiddleware_1.authMiddleware, comments_valid_1.commentValid, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.headers.authorization);
     const { content } = req.body;
+    console.log(content);
     const comment = yield posts_service_1.postService.createCommentByPostId(content, req.user);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(comment);
 }));

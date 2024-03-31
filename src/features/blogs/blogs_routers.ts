@@ -37,7 +37,7 @@ export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 
-  console.log(req.query.sortDirection)
+ 
   const searchNameTerm = req.query.searchNameTerm as string ?? null
   const sortBy = req.query.sortBy as string ?? "createdAt"
   const sortDirection = req.query.sortDirection === undefined ? 'desc' : 'asc'
@@ -62,7 +62,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
 .get('/:id/posts', async (req: Request, res: Response<PaginatorPostType>) => {
 
   const isBlog: BlogViewType | null = await blogsQueryRepository.findBlogById(req.params.id)
-  console.log(isBlog?.id)
+  
   if(!isBlog){
     return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
   }
@@ -73,7 +73,7 @@ blogsRouter.get('/', async (req: Request, res: Response<PaginatorBlogType>) => {
   const pageSize = req.query.pageSize as string ?? '10'
 
   const posts: PaginatorPostType = await blogsQueryRepository.findBlogByIdPosts(req.params.id, sortBy, sortDirection, pageNumber, pageSize)
-  console.log(req.params.id)
+ 
   if(posts){
     res.send(posts)
   } else {

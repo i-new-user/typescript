@@ -9,9 +9,8 @@ import { RequestCustomForAuthMiddleware } from './../types/reqCustForAuthMiddlew
 
 
 export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: Response, next: NextFunction) => {
-    console.log(req.headers.authorization)
+   
     if(!req.headers.authorization){
-       
         res.send(HTTP_STATUSES.UNAUTHORIZED_401)
         return
     }
@@ -20,11 +19,7 @@ export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: R
 
     const userId = await jwtService.getUserIdByToken(token)
 
-    // console.log(userId)
     if(userId){
-       
-        
-
         req.user = await usersQueryRepository.findUserById(userId)
         next()
     } else {

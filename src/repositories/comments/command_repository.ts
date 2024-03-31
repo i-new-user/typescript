@@ -6,8 +6,6 @@ import { authMiddleware } from "../../middleware/authMiddleware"
 
 export const commentsRepository = {
 
-    authMiddleware,
-
     async updateComment(id: string, content: string): Promise<boolean>{
         const result =  await commentsCollection.updateOne({_id: new ObjectId(id)}, {$set: {content: content}})
         return result.matchedCount === 1

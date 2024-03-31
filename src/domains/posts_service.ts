@@ -58,7 +58,7 @@ export const postService = {
 
     async createCommentByPostId(content: string, user:  UserOutputType): Promise<CommentViewType>{
         
-        console.log(user.id)
+        // console.log(user.id)
 
         const newComment: CommentMongoDBType = {
             content: content,

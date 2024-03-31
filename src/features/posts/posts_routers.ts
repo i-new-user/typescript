@@ -27,11 +27,14 @@ import { PaginatorCommentType } from './../comments/types/paginatorCommentType';
 import { CommentInputType } from "../comments/types/commentInputType";
 import { CommentOutputType } from "../comments/types/commentatorOutputType";
 
+import { commentValid } from "../../middleware/comments_valid";
+
 import { authMiddleware } from "../../middleware/authMiddleware";
 import { basicAuth } from "../../middleware/basic_auth";
 import { inputValidation } from "../../middleware/input_validator";
 import { isBlogCustomValid } from "../../middleware/blog_custom_valid";
 import { titleValid, shortDescriptionValid, contentValid, blogIdValid } from "../../middleware/posts_validator";
+
 
 
 export const postsRouter = Router({})
@@ -114,20 +117,26 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
 .get('/:id/comments', async (req: Request, res: Response<PaginatorCommentType>) => {
    
-    const id = req.params.id
+    const postId = req.params.id
+    console.log(postId)
+
+    const post = await postQueryRepository.findPostById(postId)
+    console.log(post)
+
    
-    const post = await postQueryRepository.findPostById(id)
    
     if(!post){
         return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-     }
+    }
 
     const sortBy = req.query.sortBy as string ?? "createdAt"
     const sortDirection = req.query.sortDirection === undefined ? 'desc' : 'asc'
     const pageNumber = req.query.pageNumber as string ?? '1'
     const pageSize = req.query.pageSize as string ?? '10'
 
-    const comments: PaginatorCommentType = await postQueryRepository.findPostByIdComments(id, sortBy, sortDirection, pageNumber, pageSize)
+    const comments: PaginatorCommentType = await postQueryRepository.findCommentsByPostId(postId, sortBy, sortDirection, pageNumber, pageSize)
+    console.log(postId)
+    console.log(comments)
     if(comments){
         res.send(comments)
     } else {
@@ -138,12 +147,15 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
 .post('/:id/comments', 
     
-     contentValid, authMiddleware,
+    authMiddleware, commentValid,
 
     async (req: RequestWithBody<CommentInputType>, res: Response<CommentOutputType>) => {
        
-        
+    console.log(req.headers.authorization)
+
     const {content} = req.body
+
+    console.log(content)
 
     const comment = await postService.createCommentByPostId(content, (req as any).user)
     res.status(HTTP_STATUSES.CREATED_201).send(comment)
