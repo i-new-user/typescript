@@ -56,12 +56,11 @@ export const postService = {
         return await postRepository.deleteAllPosts()
     },
 
-    async createCommentByPostId(content: string, user:  UserOutputType): Promise<CommentViewType>{
-        
-        // console.log(user.id)
+    async createCommentByPostId(postId: string, content: string, user:  UserOutputType): Promise<CommentViewType>{
 
         const newComment: CommentMongoDBType = {
             content: content,
+            postId: postId,
             commentatorInfo: {
                 userId: user.id,
                 userLogin: user.login

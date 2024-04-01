@@ -91,10 +91,9 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
     }
 }))
-    .post('/:id/comments', authMiddleware_1.authMiddleware, comments_valid_1.commentValid, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.headers.authorization);
+    .post('/:id/comments', authMiddleware_1.authMiddleware, comments_valid_1.commentValid, input_validator_1.inputValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.id;
     const { content } = req.body;
-    console.log(content);
-    const comment = yield posts_service_1.postService.createCommentByPostId(content, req.user);
+    const comment = yield posts_service_1.postService.createCommentByPostId(postId, content, req.user);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(comment);
 }));

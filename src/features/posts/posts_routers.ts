@@ -147,16 +147,16 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
 
 .post('/:id/comments', 
     
-    authMiddleware, commentValid,
+    authMiddleware, commentValid, inputValidation,
 
-    async (req: RequestWithBody<CommentInputType>, res: Response<CommentOutputType>) => {
+    async (req: RequestWithParamsAndBody<UriParamsPost, CommentInputType>, res: Response<CommentOutputType>) => {
        
-    console.log(req.headers.authorization)
+   
 
+    const postId = req.params.id
     const {content} = req.body
 
-    console.log(content)
 
-    const comment = await postService.createCommentByPostId(content, (req as any).user)
+    const comment = await postService.createCommentByPostId(postId, content, (req as any).user)
     res.status(HTTP_STATUSES.CREATED_201).send(comment)
 })

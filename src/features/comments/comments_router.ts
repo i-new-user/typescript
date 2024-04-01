@@ -21,6 +21,8 @@ import { authMiddleware } from "../../middleware/authMiddleware";
 import { commentsService } from "../../domains/coments_service";
 
 
+import { inputValidation } from "../../middleware/input_validator";
+
 export const commentsrRouter = Router({})
 
 
@@ -34,8 +36,10 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
 })
 
 
-.put('/:id', authMiddleware, commentValid, async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
-
+.put('/:id', authMiddleware, commentValid, inputValidation, 
+     async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
+    
+    // const commentUserId
 
     const id = req.params.id
     const {content} = req.body
