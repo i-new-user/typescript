@@ -44,35 +44,21 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
     async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
     
     const id = req.params.id
-    console.log(id)
 
-    const comment = await commentsQueryRepository.findCommentById(id)
-    console.log(comment)
-    console.log(comment?.commentatorInfo.userId)
-
-    const reqUserId = req.user?.id
-    console.log(reqUserId)
-
-   
-
-   
     const {content} = req.body
-    console.log(content)
 
     const isUpdate = await commentsService.updateComment(id, content)
-    console.log(isUpdate)
-    if(isUpdate){
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    } else {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-    }
+   
+    if(isUpdate) res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
 
-.delete('/:id', authMiddleware, async (req: RequestWithParams<UriParamsComments>, res: Response) => {
+.delete('/:id', 
+
+    authMiddleware, checkedCommentBellongsToUser,
+     
+    async (req: RequestWithParams<UriParamsComments>, res: Response) => {
+
     const isDeleted = await commentsRepository.deleteComment(req.params.id)
-    if(isDeleted){
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    } else {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-    }
+    if(isDeleted) res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+
 })
