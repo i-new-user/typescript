@@ -82,7 +82,6 @@ exports.postsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     const pageNumber = (_e = req.query.pageNumber) !== null && _e !== void 0 ? _e : '1';
     const pageSize = (_f = req.query.pageSize) !== null && _f !== void 0 ? _f : '10';
     const comments = yield query_repository_1.postQueryRepository.findCommentsByPostId(postId, sortBy, sortDirection, pageNumber, pageSize);
-    console.log(postId);
     console.log(comments);
     if (comments) {
         res.send(comments);

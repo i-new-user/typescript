@@ -12,7 +12,7 @@ import { CommentViewType } from "../../features/comments/types/commentatorViewTy
 export const commentsQueryRepository = {
 
     async findCommentById(id: string): Promise<CommentOutputType | null>{
-        const comment: WithId<CommentMongoDBType> | null= await commentsCollection.findOne( {_id: new ObjectId(id)})
+        const comment: WithId<CommentMongoDBType> | null= await commentsCollection.findOne( {id: id})
         if(comment){
             return {
                 id: String(comment._id),

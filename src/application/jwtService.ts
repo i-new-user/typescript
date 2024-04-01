@@ -15,7 +15,7 @@ export const jwtService = {
 
     async getUserIdByToken(token: string){
         try{
-
+            //если токен действителен: возвращает полезную нагрузку userId, время создания, время жизни
             const result: any = jwt.verify(token, settings.JWT_SECRET)
             console.log(result)
             return result.userId

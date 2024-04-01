@@ -124,7 +124,6 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
     console.log(post)
 
    
-   
     if(!post){
         return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     }
@@ -135,7 +134,7 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
     const pageSize = req.query.pageSize as string ?? '10'
 
     const comments: PaginatorCommentType = await postQueryRepository.findCommentsByPostId(postId, sortBy, sortDirection, pageNumber, pageSize)
-    console.log(postId)
+   
     console.log(comments)
     if(comments){
         res.send(comments)

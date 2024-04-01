@@ -22,6 +22,7 @@ import { commentsService } from "../../domains/coments_service";
 
 
 import { inputValidation } from "../../middleware/input_validator";
+import { checkedCommentBellongsToUser } from '../../middleware/checkingCommentBelongsToUser';
 
 export const commentsrRouter = Router({})
 
@@ -36,15 +37,30 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
 })
 
 
-.put('/:id', authMiddleware, commentValid, inputValidation, 
-     async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
-    
-    // const commentUserId
+.put('/:id', 
 
+    authMiddleware, commentValid, inputValidation, checkedCommentBellongsToUser,
+     
+    async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
+    
     const id = req.params.id
+    console.log(id)
+
+    const comment = await commentsQueryRepository.findCommentById(id)
+    console.log(comment)
+    console.log(comment?.commentatorInfo.userId)
+
+    const reqUserId = req.user?.id
+    console.log(reqUserId)
+
+   
+
+   
     const {content} = req.body
+    console.log(content)
 
     const isUpdate = await commentsService.updateComment(id, content)
+    console.log(isUpdate)
     if(isUpdate){
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     } else {
