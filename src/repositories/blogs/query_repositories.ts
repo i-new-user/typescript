@@ -19,9 +19,7 @@ import { ObjectId, WithId } from "mongodb";
 export const blogsQueryRepository = {
 
     async findBlogs(searchNameTerm: string | null,  sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string ): Promise<PaginatorBlogType> {
-        console.log('dddddddddddd')
-        console.log(sortDirection)
-        console.log(sortBy)
+
         const totalDocuments = await blogsCollection.countDocuments({name: {$regex: searchNameTerm ?? '', $options: 'i'}})
         
         const blogs: WithId<BlogMongoDBType>[] | [] =   await blogsCollection.find({name: {$regex: searchNameTerm ?? '', $options: 'i'}})

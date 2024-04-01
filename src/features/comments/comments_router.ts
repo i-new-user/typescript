@@ -42,14 +42,20 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
     authMiddleware, commentValid, inputValidation, checkedCommentBellongsToUser,
      
     async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
-    
+      
     const id = req.params.id
 
     const {content} = req.body
 
     const isUpdate = await commentsService.updateComment(id, content)
-   
-    if(isUpdate) res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    console.log(7)
+    if(isUpdate){
+        console.log()
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    } else {
+        console.log(9)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    }
 })
 
 .delete('/:id', 
@@ -59,6 +65,9 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
     async (req: RequestWithParams<UriParamsComments>, res: Response) => {
 
     const isDeleted = await commentsRepository.deleteComment(req.params.id)
-    if(isDeleted) res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-
+    if(isDeleted){
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    } else {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    }
 })

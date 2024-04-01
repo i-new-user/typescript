@@ -5,19 +5,24 @@ import { commentsQueryRepository } from "../repositories/comments/query_reposito
 export const checkedCommentBellongsToUser = async (req: Request, res: Response, next: NextFunction) => {
    
     const commentUserId = req.user?.id
-  
+    console.log(1)
+
     const comment = await commentsQueryRepository.findCommentById(req.params.id)
-  
+    console.log(2)
+
     if(!comment){
-      
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-        return
+        console.log(3)
+      throw new Error(`No comment`)
     }
-   
+    console.log(4)
+
     if(commentUserId !==  comment?.commentatorInfo.userId){
+        console.log(5)
+
         res.sendStatus(HTTP_STATUSES.FORBIDDEN_403)
         return
     }
-
+    
+    console.log(6)
     next()
 }
