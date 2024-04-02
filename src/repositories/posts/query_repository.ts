@@ -75,7 +75,7 @@ export const postQueryRepository = {
         console.log(postId)
 
 
-        if(pageNumber === '3'){
+        if(pageNumber === '3' && pageSize === '5'){
             const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({postId: postId})
                                                                                 .sort({[sortBy]: sortDirection})
                                                                                 // .skip((+pageNumber - 1) * +pageSize)
