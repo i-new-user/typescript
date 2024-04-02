@@ -9,10 +9,11 @@ export const checkedCommentBellongsToUser = async (req: Request, res: Response, 
 
     const comment = await commentsQueryRepository.findCommentById(req.params.id)
     console.log(2)
+    console.log(comment)
 
     if(!comment){
         console.log(3)
-      throw new Error(`No comment`)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     }
     console.log(4)
 
