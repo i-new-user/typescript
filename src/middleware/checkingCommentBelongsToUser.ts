@@ -14,6 +14,7 @@ export const checkedCommentBellongsToUser = async (req: Request, res: Response, 
     if(!comment){
         console.log(3)
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
     }
     console.log(4)
 

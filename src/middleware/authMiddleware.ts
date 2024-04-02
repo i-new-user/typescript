@@ -11,7 +11,7 @@ import { RequestCustomForAuthMiddleware } from './../types/reqCustForAuthMiddlew
 export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: Response, next: NextFunction) => {
    
     if(!req.headers.authorization){
-        res.send(HTTP_STATUSES.UNAUTHORIZED_401)
+        res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
         return
     }
 
@@ -23,7 +23,8 @@ export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: R
         req.user = await usersQueryRepository.findUserById(userId)
         next()
     } else {
-        res.send(HTTP_STATUSES.UNAUTHORIZED_401)
+        res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
+        return
     }
     
 }
