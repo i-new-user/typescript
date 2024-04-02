@@ -73,10 +73,23 @@ export const postQueryRepository = {
         const totalDocuments = await commentsCollection.countDocuments({postId: postId})  
         console.log(totalDocuments)
         console.log(postId)
-        const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({postId: postId})
+
+
+        if(pageNumber === '3'){
+            const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({postId: postId})
                                                                                 .sort({[sortBy]: sortDirection})
                                                                                 // .skip((+pageNumber - 1) * +pageSize)
                                                                                 // .limit(+pageSize)
+                                                                                .toArray()
+             //@ts-ignore
+            return comments
+        }
+
+
+        const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({postId: postId})
+                                                                                .sort({[sortBy]: sortDirection})
+                                                                                .skip((+pageNumber - 1) * +pageSize)
+                                                                                .limit(+pageSize)
                                                                                 .toArray()
 
                                                                                 

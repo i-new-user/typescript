@@ -120,6 +120,7 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
     const postId = req.params.id
     console.log(postId)
 
+
     const post = await postQueryRepository.findPostById(postId)
     console.log(post)
 
