@@ -70,10 +70,10 @@ export const postQueryRepository = {
 
     async findCommentsByPostId(postId: string, sortBy: string, sortDirection: 'desc' | 'asc', pageNumber: string, pageSize: string): Promise<PaginatorCommentType>{
         
-        const totalDocuments = await commentsCollection.countDocuments()  
+        const totalDocuments = await commentsCollection.countDocuments({postId: postId})  
         console.log(totalDocuments)
         console.log(postId)
-        const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find()
+        const comments: WithId<CommentMongoDBType>[] | [] = await commentsCollection.find({postId: postId})
                                                                                 .sort({[sortBy]: sortDirection})
                                                                                 // .skip((+pageNumber - 1) * +pageSize)
                                                                                 // .limit(+pageSize)
