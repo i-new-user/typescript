@@ -39,8 +39,6 @@ export const userService = {
 
 
     async deleteUser(id: string): Promise<boolean>{
-        console.log('service')
-        console.log(id)
         return await usersRepository.deleteUser(id)
     },
 

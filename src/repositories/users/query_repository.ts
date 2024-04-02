@@ -65,7 +65,18 @@ export const usersQueryRepository = {
         } else {
             return null
         }
-    }
+    },
+
+
+    // async findUserByEmail(db_email: string): Promise<boolean | null>{
+    //     const email: boolean | null = await usersCollection.findOne({email})
+    // },
+
+
+    // async findUserByLogin(db_login: string): Promise<boolean | null>{
+    //     const login: boolean  | null = await usersCollection.findOne({login})
+       
+    // }
 
 }
 

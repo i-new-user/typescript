@@ -61,6 +61,10 @@ usersRouter.get('/',  async (req: Request, res: Response<PaginatorUserType>) => 
     
     async (req: RequestWithBody<UserInputType>, res: Response<UserOutputType>) => {
 
+    // const db_login = await usersQueryRepository.findUserByEmail(db_login)
+
+    // const db_email = await usersQueryRepository.findUserByLogin(db_email)
+
     const {login,  password, email} = req.body
 
     const newUser = await userService.createUser(login, password, email)

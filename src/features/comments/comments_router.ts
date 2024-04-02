@@ -42,7 +42,8 @@ commentsrRouter.get('/:id', async (req: RequestWithParams<UriParamsComments>, re
     authMiddleware, commentValid, inputValidation, checkedCommentBellongsToUser,
      
     async (req: RequestWithParamsAndBody<UriParamsComments, CommentInputType>, res: Response<CommentOutputType>) => {
-      
+        
+    console.log( req.headers.authorization)
     const id = req.params.id
 
     const {content} = req.body
