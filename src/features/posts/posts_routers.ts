@@ -153,11 +153,6 @@ postsRouter.get('/', async (req: Request, res: Response<PaginatorPostType>) => {
        
     const postId = req.params.id
 
-    const post = await postQueryRepository.findPostById(postId)
-    if(!post){
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-    }
-   
     const {content} = req.body
 
     const comment = await postService.createCommentByPostId(postId, content, (req as any).user)
