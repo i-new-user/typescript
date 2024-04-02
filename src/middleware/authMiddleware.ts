@@ -23,7 +23,7 @@ export const authMiddleware = async (req: RequestCustomForAuthMiddleware, res: R
         req.user = await usersQueryRepository.findUserById(userId)
         next()
     } else {
-        res.send(HTTP_STATUSES.FORBIDDEN_403)
+        res.send(HTTP_STATUSES.UNAUTHORIZED_401)
     }
     
 }
